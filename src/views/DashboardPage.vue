@@ -241,3 +241,24 @@ const addContract = ()=>{
     </template>
   </DialogModal>
 </template>
+
+<style scoped>
+.fade-away-enter-from{
+  opacity: 0
+}
+.fade-away-enter-to{
+  opacity: 1;
+}
+.fade-away-enter-active{
+  transition: opacity 0.3s ease-in-out;
+}
+.fade-away-leave-active{
+  transition: opacity 0.3s ease-in-out;
+}
+.fade-away-leave-from{
+  opacity: 1;
+}
+.fade-away-leave-to{
+  opacity: 0;
+}
+</style>
