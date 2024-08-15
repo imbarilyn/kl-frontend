@@ -3,11 +3,12 @@ import { useContractStore, useNotificationsStore} from '@/stores'
 import DialogModal from '@/components/toasts/DialogModal.vue'
 import { useField } from 'vee-validate'
 import { ref, watch } from 'vue'
-
+import { useRouter} from 'vue-router'
 
 
 const contractStore = useContractStore()
 const notificationsStore = useNotificationsStore()
+const router = useRouter()
 const addContractEmail = () => {
   contractStore.openAddEmailDialog()
 }
@@ -53,6 +54,15 @@ const postEmail = () => {
 
 const logout = () => {
   contractStore.openLogoutDialog()
+}
+
+const addContract = ()=>{
+  router.push(
+    {
+      name: 'addContract'
+    }
+  )
+
 }
 
 </script>
