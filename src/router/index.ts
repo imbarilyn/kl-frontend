@@ -7,8 +7,15 @@ const router = createRouter({
     {
       name: 'Home',
       path: '/',
-      component: ()=>import ('../views/HomePage.vue')
-    }
+      component: ()=>import ('@/views/DashboardPage.vue'),
+      children: [
+        {
+          name: 'addContract',
+          path: 'add-contract',
+          component: ()=>import ('@/components/ContractForm.vue')
+        }
+      ]
+    },
 
   ]
 })
