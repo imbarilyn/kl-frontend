@@ -119,20 +119,11 @@ const addContract = ()=>{
 
 <!--        bottom section-->
         <div class="absolute space-y-2 bottom-0 pb-4 flex flex-col w-full">
-<!--          settings section-->
-<!--          <div class="me-8">-->
-<!--            <button class="btn btn-sm w-full justify-start">-->
-<!--              <span class="material-icons-outlined">settings</span>-->
-<!--              <span>Settings</span>-->
-<!--            </button>-->
-<!--          </div>-->
-<!--Add email-->
+
           <div class="me-8">
-            <button
-              @click="addContractEmail"
-              class=" btn btn-sm w-full justify-start">
-              <span class="material-icons-outlined">add</span>
-              <span>Add Email</span>
+            <button class="btn btn-sm w-full justify-start">
+              <span class="material-icons-outlined">settings</span>
+              <span>Settings</span>
             </button>
           </div>
 
