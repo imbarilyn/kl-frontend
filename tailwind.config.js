@@ -1,4 +1,5 @@
 /** @type {import('tailwindcss').Config} */
+const { blackA, grass, green } = require('@radix-ui/colors')
 export default {
   content: [
     "./index.html",
@@ -20,6 +21,10 @@ export default {
         'main-color': '#00A2E6',
         'main-color-light': '#00b5e6',
         'main-color-dark': '#0092e6',
+        ...blackA,
+        ...grass,
+        ...green
+
       }
     },
   },
