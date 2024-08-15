@@ -140,10 +140,24 @@ const addContract = ()=>{
       </div>
     </div>
 <!--    right side-->
-    <div class="flex flex-col">
-      <div class="">
-        <p>Hello</p>
-        <div><hr class="text-2xl! text-red-500"></div>
+    <div class="flex flex-col w-full relative">
+      <div class="flex justify-end w-full sticky top-0 px-4 py-3">
+        <div class="">
+          <button
+            @click="addContractEmail"
+            class=" btn btn-sm w-full btn-ghost justify-start">
+            <span class="material-icons text-main-color">email</span>
+            <span> New email</span>
+          </button>
+        </div>
+        <div>
+          <button
+            @click="addContract"
+            class=" btn btn-sm btn-ghost w-full justify-start">
+            <span class="material-icons text-main-color">assignment_add</span>
+            <span> New contract</span>
+          </button>
+        </div>
       </div>
       <div>
 <!--        <RouterView #default="{route, Component}">-->
