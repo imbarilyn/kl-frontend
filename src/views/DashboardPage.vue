@@ -159,15 +159,12 @@ const addContract = ()=>{
           </button>
         </div>
       </div>
-      <div>
-<!--        <RouterView #default="{route, Component}">-->
-<!--          <template>-->
-<!--            <component :is="Component" :key="route.fullPath" />-->
-<!--          </template>-->
-<!--        </RouterView>-->
-        <p>Hi</p>
-      </div>
+        <RouterView #default="{Component, route}">
+          <transition name="fade-away" mode="in-out">
+            <component :is="Component" :key="route.fullPath" />
+          </transition>
 
+        </RouterView>
     </div>
 
   </div>
