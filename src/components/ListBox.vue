@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue'
 import {
   Listbox,
@@ -9,18 +9,17 @@ import {
 } from '@headlessui/vue'
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/vue/20/solid'
 
-const countries = [
-  { name: 'Kenya' },
-  { name: 'Uganda' },
-  { name: 'Tanzania' },
-  { name: 'Rwanda' },
-  { name: 'Djibouti' },
-  { name: 'South Africa' },
-  { name: 'Nigeria' },
-  { name: 'Ghana' },
-  { name: 'Angola' }
-]
-const selectedCountry = ref(countries[0])
+interface ListBoxOptions{
+  name: string
+  code?: string
+}
+
+interface ListBoxProps{
+  listProps: ListBoxOptions[]
+}
+
+const props = defineProps<ListBoxProps>();
+const selectedCountry = ref(props.listProps[0].name);
 </script>
 
 <template>
@@ -30,7 +29,7 @@ const selectedCountry = ref(countries[0])
         <ListboxButton
           class="relative w-full cursor-default rounded-lg bg-white py-3 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm"
         >
-          <span class="block truncate">{{ selectedCountry.name }}</span>
+          <span class="block truncate">{{ selectedCountry}}</span>
           <span
             class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2"
           >
@@ -51,14 +50,14 @@ const selectedCountry = ref(countries[0])
           >
             <ListboxOption
               v-slot="{ active, selected }"
-              v-for="country in countries"
-              :key="country.name"
-              :value="country"
+              v-for="option in props.listProps"
+              :key="option.code"
+              :value="option.name"
               as="template"
             >
               <li
                 :class="[
-                  active ? 'bg-amber-100 text-amber-900' : 'text-gray-900',
+                  active ? 'bg-sky-200 text-main-color' : 'text-gray-900',
                   'relative cursor-default select-none py-2 pl-10 pr-4',
                 ]"
               >
@@ -67,11 +66,11 @@ const selectedCountry = ref(countries[0])
                     selected ? 'font-medium' : 'font-normal',
                     'block truncate',
                   ]"
-                >{{ country.name }}</span
+                >{{ option.name }}</span
                 >
                 <span
                   v-if="selected"
-                  class="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600"
+                  class="absolute inset-y-0 left-0 flex items-center pl-3 text-main-color"
                 >
                   <CheckIcon class="h-5 w-5" aria-hidden="true" />
                 </span>
