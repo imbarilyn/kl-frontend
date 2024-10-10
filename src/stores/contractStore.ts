@@ -32,6 +32,25 @@ export const  useContractStore  = defineStore('contractStore', ()=>{
     isLogoutDialogOpen.value.isOpen = false
   }
 
+ async function getContracts (){
+    try{
+      const res = await fetch('http://localhost:8000/contracts/', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        mode: 'cors',
+      })
+      const response = await res.json()
+      console.log(response)
+      return response
+    }
+    catch (error){
+      console.log(error)
+    }
+
+ }
+
 
 
   return{
@@ -40,7 +59,8 @@ export const  useContractStore  = defineStore('contractStore', ()=>{
     closeEmailDialog,
     isLogoutDialogOpen,
     openLogoutDialog,
-    closeLogoutDialog
+    closeLogoutDialog,
+    getContracts
 
   }
 })
