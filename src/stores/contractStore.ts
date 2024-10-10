@@ -1,6 +1,9 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
+const BASE_URL = import.meta.env
+  .BASE_URL as string
+
 export const  useContractStore  = defineStore('contractStore', ()=>{
   const  isEmailDialogOpen = ref({
     isOpen:false

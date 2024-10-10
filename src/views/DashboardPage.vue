@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { useContractStore, useNotificationsStore} from '@/stores'
-import DialogModal from '@/components/toasts/DialogModal.vue'
+import DialogModal from '@/components/DialogModal.vue'
 import { useField } from 'vee-validate'
 import { ref, watch } from 'vue'
 import { useRouter} from 'vue-router'
