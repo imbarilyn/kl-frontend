@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import {
   Combobox,
   ComboboxInput,
@@ -43,6 +43,16 @@ let filteredPeople = computed(() =>
         .includes(query.value.toLowerCase().replace(/\s+/g, ''))
     )
 )
+
+const emits = defineEmits<{
+  (event: 'comboChoice', value: string): void
+}>()
+
+watch(()=>selected.value, (value)=>{
+  if(value){
+    emits('comboChoice', value)
+  }
+})
 </script>
 
 
