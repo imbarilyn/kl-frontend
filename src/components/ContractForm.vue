@@ -2,8 +2,9 @@
 import ListBox from '@/components/ListBox.vue'
 import ComboBox from '@/components/ComboBox.vue'
 import { useField } from 'vee-validate'
-import { reactive, watch } from 'vue'
+import { reactive, ref, watch } from 'vue'
 import moment from 'moment'
+import { useContractStore } from '@/stores'
 
 const countries = [
   { name: 'Kenya' },
@@ -39,9 +40,8 @@ const contractData = reactive({
   category: '',
   startDate: '',
   expiryDate: '',
-  contractFile: ''
 })
-
+const contractStore = useContractStore()
 // validator function
 const nameValidator =(value: string) =>{
   const nameRegExp = /^[a-zA-Z0-9\s]+$/
@@ -128,6 +128,70 @@ watch(()=>contractData.expiryDate, (value)=>{
 
 
 
+
+
+const fileUpload = ref()
+const fileUploadError = ref('')
+const fileAdd = (e: Event) =>{
+  const target = e.target as HTMLInputElement
+  const file = target.files as FileList
+  const maxSize = 1024 * 1024 * 3
+  if(file.length > 0 && file[0].size <= maxSize){
+    fileUpload.value = file
+    console.log(fileUpload.value[0])
+    return true
+  }
+  else{
+    fileUploadError.value = 'File size should not exceed 3MB'
+    return false
+  }
+}
+
+const everyThingIsValid = () => {
+  return contractNameMeta.validated && contractNameMeta.valid && vendorNameMeta.validated  && vendorNameMeta.valid && startDateMeta.validated   && startDateMeta.valid &&  expiryDateMeta.validated  && expiryDateMeta.valid  && fileUpload;
+}
+
+const handleCountry = (value: string) =>{
+  contractData.country = value
+}
+
+const handleCompany = (value: string) =>{
+  contractData.company = value
+}
+
+const handleCategory = (value: string)=>{
+  contractData.category = value
+}
+
+// We can now upload our contracts hooray!
+const addContract = () => {
+  const formData = new FormData()
+  console.log(typeof (fileUpload.value))
+
+  // All good we can now persist the server
+  if(everyThingIsValid()){
+    formData.append('contract_name', contractData.contractName)
+    formData.append('vendor_name', contractData.vendorName)
+    formData.append('country', contractData.country)
+    formData.append('company_name', contractData.company)
+    formData.append('category', contractData.category)
+    formData.append('start_date', contractData.startDate)
+    formData.append('end_date', contractData.expiryDate)
+    formData.append('file', fileUpload.value[0])
+    formData.append('status', 'active')
+    console.log('Contract added successfully')
+    contractStore.addContract(formData)
+      .then((resp)=>{
+        console.log(resp)
+      })
+
+  }
+  else{
+    console.log('Contract not added')
+  }
+}
+
+
 </script>
 
 <template>
@@ -195,20 +259,20 @@ watch(()=>contractData.expiryDate, (value)=>{
                     <div class="flex justify-between items-center w-full">
                       <label class="label font-semibold text-sm text-white" for="country">Country</label>
                     </div>
-                    <ListBox :list-props="countries" />
+                    <ListBox :list-props="countries" @list-choice="handleCountry"/>
                   </div>
                   <div>
                     <div class="flex justify-between items-center w-full">
                       <label class="label font-semibold text-sm text-white" for="country">Company</label>
                     </div>
-                    <ListBox :list-props="companies" />
+                    <ListBox :list-props="companies" @list-choice="handleCompany" />
                   </div>
                 </div>
                 <div>
                   <div class="flex justify-between items-center w-full">
                     <label class="label font-semibold text-sm text-white" for="country">Category</label>
                   </div>
-                  <ComboBox :combo-props="categories" />
+                  <ComboBox :combo-props="categories"  @combo-choice="handleCategory"/>
                 </div>
 
                 <div class="grid grid-cols-2 gap-2">
@@ -258,9 +322,13 @@ watch(()=>contractData.expiryDate, (value)=>{
                     <label class="label font-semibold text-sm text-white" for="contractName">Upload Contract</label>
                   </div>
                   <input
+                    @change="fileAdd"
                     type="file"
                     accept=".pdf"
                     class="file-input file-input-bordered file-input-info w-full" />
+                  <div v-if='fileUploadError.length > 0'>
+                    <span class="text-rose-500 test-sm">{{fileUploadError}}</span>
+                  </div>
                 </div>
                 <div class="w-full">
                   <button type="submit" class="btn btn-sm  bg-main-color-light hover:bg-main-color-dark w-full">Submit
