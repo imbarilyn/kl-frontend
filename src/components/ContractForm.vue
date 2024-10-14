@@ -4,7 +4,11 @@ import ComboBox from '@/components/ComboBox.vue'
 import { useField } from 'vee-validate'
 import { reactive, ref, watch } from 'vue'
 import moment from 'moment'
-import { useContractStore } from '@/stores'
+import { useContractStore, useNotificationsStore } from '@/stores'
+import { useRouter } from 'vue-router'
+
+
+const notificationStore = useNotificationsStore()
 
 const countries = [
   { name: 'Kenya' },
@@ -162,7 +166,7 @@ const handleCompany = (value: string) =>{
 const handleCategory = (value: string)=>{
   contractData.category = value
 }
-
+const router = useRouter()
 // We can now upload our contracts hooray!
 const addContract = () => {
   const formData = new FormData()
@@ -179,15 +183,21 @@ const addContract = () => {
     formData.append('end_date', contractData.expiryDate)
     formData.append('file', fileUpload.value[0])
     formData.append('status', 'active')
-    console.log('Contract added successfully')
     contractStore.addContract(formData)
       .then((resp)=>{
-        console.log(resp)
+        if(resp.result === 'success'){
+          notificationStore.addNotification(`${resp.message}`, 'success')
+          setTimeout(()=>{
+            router.push({name: 'DataTable'})
+          }, 1000)
+        }
+        else{
+          notificationStore.addNotification(`${resp.message}`, 'error')
+        }
       })
-
   }
   else{
-    console.log('Contract not added')
+   notificationStore.addNotification('Please fill in all the fields', 'error')
   }
 }
 
@@ -323,6 +333,7 @@ const addContract = () => {
                   </div>
                   <input
                     @change="fileAdd"
+                    required
                     type="file"
                     accept=".pdf"
                     class="file-input file-input-bordered file-input-info w-full" />
