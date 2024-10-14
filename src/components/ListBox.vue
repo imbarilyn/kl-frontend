@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import {
   Listbox,
   ListboxLabel,
@@ -19,17 +19,27 @@ interface ListBoxProps{
 }
 
 const props = defineProps<ListBoxProps>();
-const selectedCountry = ref(props.listProps[0].name);
+const selectedOption = ref(props.listProps[0].name);
+
+const emits =defineEmits<{
+  (event: 'listChoice', value: string): void
+}>()
+
+watch(()=>selectedOption.value, (value)=>{
+  if(value){
+    emits('listChoice', value)
+  }
+})
 </script>
 
 <template>
   <div class="">
-    <Listbox v-model="selectedCountry">
+    <Listbox v-model="selectedOption">
       <div class="relative mt-1">
         <ListboxButton
           class="relative w-full cursor-default rounded-lg bg-white py-3 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm"
         >
-          <span class="block truncate">{{ selectedCountry}}</span>
+          <span class="block truncate">{{ selectedOption }}</span>
           <span
             class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2"
           >
