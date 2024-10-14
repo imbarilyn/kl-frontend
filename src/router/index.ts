@@ -19,6 +19,16 @@ const router = createRouter({
           component: ()=>import ('@/components/DataTables.vue')
         },
         {
+          name: 'EditContract',
+          path: 'edit-contract/:id',
+          component: ()=>import('@/components/EditContract.vue'),
+          props: (route: any)=>{
+            return{
+              id: route.params.id
+            }
+          }
+        },
+        {
           name: 'addContract',
           path: 'add-contract',
           component: ()=>import ('@/components/ContractForm.vue')
