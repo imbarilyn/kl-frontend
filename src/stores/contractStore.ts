@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
+import { useNotificationsStore } from '@/stores/notificationStore'
 
 const BASE_URL = import.meta.env.BASE_URL as string
 
@@ -64,7 +65,7 @@ export const  useContractStore  = defineStore('contractStore', ()=>{
  async function addContract(contract: any){
 
     try {
-      const res = await fetch('http://localhost:8000/add_contracts/', {
+      const res = await fetch('http://localhost:8000/add-contracts/', {
         method: 'POST',
         body: contract,
         mode: 'cors'
@@ -78,6 +79,54 @@ export const  useContractStore  = defineStore('contractStore', ()=>{
     }
  }
 
+ async function getContract(contractId: Number ){
+    try{
+      const res = await fetch(`http://localhost:8000/contract/${contractId}`, {
+        method: 'GET',
+        mode: 'cors'
+      })
+      const response = await res.json()
+      console.log(response)
+      return response
+    }
+    catch(error){
+      console.log('here at get contract', error)
+    }
+
+  }
+
+ async function updateContract(contractId: Number, contract: any){
+    try{
+      const response = await fetch(`http://localhost:8000/update-contract/${contractId}`, {
+        method: 'PUT',
+        mode: 'cors',
+        body: contract
+      })
+      const res = await response.json()
+      console.log(res)
+      return res
+    }
+    catch(error){
+      console.log('here at update', error)
+    }
+ }
+
+ async function deleteContract(contractId: Number) {
+    const notificationStore = useNotificationsStore()
+   try {
+     const response = await fetch(`http://localhost:8000/delete-contract/${contractId}`, {
+       method: 'DELETE',
+       mode: 'cors'
+     })
+     const res = await response.json()
+     console.log(res)
+     return res
+   } catch (error) {
+     notificationStore.addNotification('Unable to delete contract', 'error')
+     console.log('here at delete', error)
+   }
+ }
+
 
 
   return{
@@ -88,6 +137,12 @@ export const  useContractStore  = defineStore('contractStore', ()=>{
     openLogoutDialog,
     closeLogoutDialog,
     getContracts,
-    addContract
+    addContract,
+    updateContract,
+    getContract,
+    deleteContract,
+    isDeleteDialogOpen,
+    closeDeleteDialog,
+    openDeleteDialog,
   }
 })
