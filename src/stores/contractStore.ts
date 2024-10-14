@@ -13,6 +13,10 @@ export const  useContractStore  = defineStore('contractStore', ()=>{
     isOpen:false
   })
 
+  const isDeleteDialogOpen = ref({
+    isOpen: false
+  })
+
 
 
   const openAddEmailDialog
@@ -30,6 +34,13 @@ export const  useContractStore  = defineStore('contractStore', ()=>{
 
   const closeLogoutDialog = ()=>{
     isLogoutDialogOpen.value.isOpen = false
+  }
+
+  const openDeleteDialog = ()=>{
+    isDeleteDialogOpen.value.isOpen = true
+  }
+  const closeDeleteDialog = ()=>{
+    isDeleteDialogOpen.value.isOpen = false
   }
 
  async function getContracts (){
