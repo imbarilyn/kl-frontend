@@ -6,6 +6,7 @@ import { useContractStore, useNotificationsStore } from '@/stores'
 import { useField } from 'vee-validate'
 import moment from 'moment'
 import { useRouter } from 'vue-router'
+import Swal from 'sweetalert2'
 
 const contractStore = useContractStore()
 const notificationStore = useNotificationsStore()
@@ -221,8 +222,17 @@ onMounted(()=> {
         contractData.expiryDate = response.data.end_date
         fileUpload.value = response.data.file_upload
       } else {
-        notificationStore.addNotification('Error fetching contract', 'error')
+        // notificationStore.addNotification('Error fetching contract', 'error')
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'Error fetching contract please try again',
+          timer: 1500,
+          showConfirmButton: false
+        })
+        router.go(-1)
       }
+
     })
     .catch((error) => {
       console.log(error)
