@@ -18,12 +18,17 @@ export default {
         'poppins-extra-bold': ['Poppins Extrabold', 'Ubuntu', 'san-serif', 'serif']
       },
       colors: {
-        'main-color': '#00A2E6',
-        'main-color-light': '#00b5e6',
-        'main-color-dark': '#0092e6',
-        ...blackA,
-        ...grass,
-        ...green
+      'AF-50': '#eef8ff',
+      'AF-100': '#dcf1ff',
+      'AF-200': '#b2e4ff',
+      'AF-300': '#6dd0ff',
+      'AF-400': '#20b8ff',
+      'AF-500': '#20b8ff',
+      'AF-600': '#20b8ff',
+      'AF-700': '#0064b4',
+      'AF-800': '#005594',
+      'AF-900': '#004172',
+      'AF-950': '#002c51',
 
       }
     },
