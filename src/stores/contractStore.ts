@@ -2,10 +2,11 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { useNotificationsStore } from '@/stores/notificationStore'
 
-const BASE_URL = import.meta.env.BASE_URL as string
+const BASE_URL = import.meta.env.VITE_BASE_URL as string
 
 
 export const  useContractStore  = defineStore('contractStore', ()=>{
+  const appIsFetching = ref<boolean>(false)
   const  isEmailDialogOpen = ref({
     isOpen:false
   })
@@ -17,6 +18,7 @@ export const  useContractStore  = defineStore('contractStore', ()=>{
   const isDeleteDialogOpen = ref({
     isOpen: false
   })
+
 
 
 
@@ -46,7 +48,7 @@ export const  useContractStore  = defineStore('contractStore', ()=>{
 
  async function getContracts (){
     try{
-      const res = await fetch('http://localhost:8000/contracts/', {
+      const res = await fetch(`${BASE_URL}/contracts/`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -63,12 +65,12 @@ export const  useContractStore  = defineStore('contractStore', ()=>{
  }
 
  async function addContract(contract: any){
-
+    console.log(contract)
     try {
-      const res = await fetch('http://localhost:8000/add-contracts/', {
+      const res = await fetch(`${BASE_URL}/add-contracts/`, {
         method: 'POST',
         body: contract,
-        mode: 'cors'
+        mode: 'cors',
       })
       const response = await res.json()
       console.log(response)
@@ -81,7 +83,7 @@ export const  useContractStore  = defineStore('contractStore', ()=>{
 
  async function getContract(contractId: Number ){
     try{
-      const res = await fetch(`http://localhost:8000/contract/${contractId}`, {
+      const res = await fetch(`${BASE_URL}/contract/${contractId}`, {
         method: 'GET',
         mode: 'cors'
       })
@@ -97,10 +99,13 @@ export const  useContractStore  = defineStore('contractStore', ()=>{
 
  async function updateContract(contractId: Number, contract: any){
     try{
-      const response = await fetch(`http://localhost:8000/update-contract/${contractId}`, {
+      const response = await fetch(`${BASE_URL}/update-contract/${contractId}`, {
         method: 'PUT',
         mode: 'cors',
-        body: contract
+        body: contract,
+        headers: {
+          'Content-Type': 'application/json',
+        }
       })
       const res = await response.json()
       console.log(res)
@@ -114,7 +119,7 @@ export const  useContractStore  = defineStore('contractStore', ()=>{
  async function deleteContract(contractId: Number) {
     const notificationStore = useNotificationsStore()
    try {
-     const response = await fetch(`http://localhost:8000/delete-contract/${contractId}`, {
+     const response = await fetch(`${BASE_URL}/delete-contract/${contractId}`, {
        method: 'DELETE',
        mode: 'cors'
      })
@@ -125,6 +130,36 @@ export const  useContractStore  = defineStore('contractStore', ()=>{
      notificationStore.addNotification('Unable to delete contract', 'error')
      console.log('here at delete', error)
    }
+ }
+
+ async function addEmail(email: string){
+    console.log(email)
+    try{
+      const response = await fetch(`${BASE_URL}/add-emails`,{
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        mode: 'cors',
+        body: JSON.stringify({email})
+      })
+      const resp = await response.json()
+      console.log(resp)
+      return resp
+    }
+    catch(error){
+      console.log(error)
+    }
+ }
+
+ async function getEmailAddresses (){
+    try{
+      const response  = await fetch(`${BASE_URL}/emails`)
+      return  await response.json()
+    }
+    catch(error) {
+      console.log(error)
+    }
  }
 
 
@@ -144,5 +179,7 @@ export const  useContractStore  = defineStore('contractStore', ()=>{
     isDeleteDialogOpen,
     closeDeleteDialog,
     openDeleteDialog,
+    addEmail,
+    getEmailAddresses
   }
 })
