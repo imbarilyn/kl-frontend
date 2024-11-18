@@ -32,6 +32,11 @@ const router = createRouter({
           name: 'addContract',
           path: 'add-contract',
           component: ()=>import ('@/components/ContractForm.vue')
+        },
+        {
+          name: 'email',
+          path: 'view-email',
+          component: ()=>import ('@/components/EmailAddress.vue')
         }
       ]
     },
