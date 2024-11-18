@@ -6,6 +6,8 @@ import { reactive, ref, watch } from 'vue'
 import moment from 'moment'
 import { useContractStore, useNotificationsStore } from '@/stores'
 import { useRouter } from 'vue-router'
+import Swal from 'sweetalert2'
+import { showAlert } from '@/alert'
 
 
 const notificationStore = useNotificationsStore()
@@ -15,11 +17,14 @@ const countries = [
   { name: 'Uganda' },
   { name: 'Tanzania' },
   { name: 'Rwanda' },
-  { name: 'Djibouti' },
   { name: 'South Africa' },
-  { name: 'Nigeria' },
   { name: 'Ghana' },
-  { name: 'Angola' }
+  {name: 'Zambia'},
+  {name: 'Burundi'},
+  {name: 'Malawi'},
+  {name: 'Ethiopia'},
+  {name: 'Sudan'},
+
 ]
 
 const companies = [
@@ -48,6 +53,7 @@ const contractData = reactive({
 const contractStore = useContractStore()
 // validator function
 const nameValidator =(value: string) =>{
+  // console.log('nameValidator', value, contractData.contractName)
   const nameRegExp = /^[a-zA-Z0-9\s]+$/
   if(!value){
     return 'Name is required'
@@ -183,16 +189,20 @@ const addContract = () => {
     formData.append('end_date', contractData.expiryDate)
     formData.append('file', fileUpload.value[0])
     formData.append('status', 'active')
+    
     contractStore.addContract(formData)
       .then((resp)=>{
         if(resp.result === 'success'){
-          notificationStore.addNotification(`${resp.message}`, 'success')
+          // notificationStore.addNotification(`${resp.message}`, 'success')
+        showAlert({message: `${resp.message}`, type: 'success'})
+
           setTimeout(()=>{
             router.push({name: 'DataTable'})
-          }, 1000)
+          }, 2000)
         }
         else{
-          notificationStore.addNotification(`${resp.message}`, 'error')
+          showAlert({message: `${resp.message}`, type: 'error'})
+          // notificationStore.addNotification(`${resp.message}`, 'error')
         }
       })
   }
@@ -342,7 +352,7 @@ const addContract = () => {
                   </div>
                 </div>
                 <div class="w-full">
-                  <button type="submit" class="btn btn-sm  bg-main-color-light hover:bg-main-color-dark w-full">Submit
+                  <button type="submit" class="btn btn-sm  bg-AF-400 hover:bg-AF-600 w-full">Submit
                   </button>
                 </div>
               </div>
