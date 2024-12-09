@@ -2,11 +2,9 @@
 import { useContractStore, useNotificationsStore } from '@/stores'
 import DialogModal from '@/components/DialogModal.vue'
 import { useField } from 'vee-validate'
-import { ref, watch } from 'vue'
-import { useRouter} from 'vue-router'
-
 import { computed, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { showAlert } from '@/alert'
 
 const contractStore = useContractStore()
 const router = useRouter()
@@ -71,13 +69,32 @@ const logout = () => {
   contractStore.openLogoutDialog()
 }
 
-const addContract = ()=>{
+const addContract = () => {
   router.push(
     {
       name: 'addContract'
     }
   )
+}
 
+const viewContracts = () => {
+  router.push(
+    {
+      name: 'DataTable'
+    }
+  )
+}
+
+const viewEmailAddress = () => {
+  router.push(
+    {
+      name: 'email'
+    }
+  )
+}
+const isCollapse = ref(false)
+const collapseSidebar = (value: boolean) => {
+  isCollapse.value = value
 }
 
 </script>
