@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import { useContractStore } from '@/stores'
+import { showAlert } from '@/alert'
+import DialogModal from '@/components/DialogModal.vue'
+import { useField } from 'vee-validate'
+import { type EmailAddressPayload } from '@/stores'
 
 const contractStore = useContractStore()
 
@@ -50,6 +54,64 @@ onMounted(() => {
 
 })
 
+const emailUpdateLoading = ref<boolean>(false)
+const updateEmail = () => {
+  // console.log('We are editing the emails')
+  if (selectedEmail.value?.email === contractEmail.value) {
+    showAlert({
+      message: 'Email address is the same, no changes made',
+      type: 'info'
+    })
+  } else {
+    if (emailMeta.validated && emailMeta.valid) {
+      emailPayLoad.value = {
+        email: contractEmail.value,
+        id: selectedEmail.value?.id as number
+      }
+      emailUpdateLoading.value = true
+      contractStore.editEmail(emailPayLoad.value)
+        .then(resp => {
+          if (resp.result === 'success') {
+            showAlert({
+              message: 'Email address updated successfully',
+              type: 'success'
+            })
+            // closeDialog()
+            setTimeout(() => {
+              emailUpdateLoading.value = false
+              closeDialog()
+              window.location.reload()
+            }, 1000)
+          } else {
+            showAlert({
+              message: 'Unable to update email address, please try again',
+              type: 'error'
+            })
+          }
+        })
+        .catch(err => {
+          console.log(err)
+          showAlert({
+            message: 'Unable to update email address, please try again',
+            type: 'error'
+          })
+        })
+        .finally(() => {
+          emailUpdateLoading.value = false
+        })
+    } else {
+      return
+    }
+  }
+}
+
+const deleteEmail = (email: Number) => {
+  console.log('Delete email')
+}
+
+const closeDialog = () => {
+  openDialog.value = false
+}
 </script>
 
 <template>
