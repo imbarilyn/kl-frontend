@@ -108,104 +108,128 @@ const showArrow = computed(() => {
 
 
 <template>
-  <div class="min-h-screen flex flex-row">
-<!--    right side-->
-    <div class="relative h-screen w-64 ">
-      <div class= 'fixed px-4 py-4 w-64 bg-main-color bottom-0 top-0 inset-y-0 h-screen'>
-<!--        klm logo-->
-        <div class="">
-          <p class="text-white">Welcome Linah</p>
-        </div>
-<!--        contracts per country  section-->
-        <div class="pt-4 flex flex-col">
-          <div class="pb-4">
-            <p class="text-white font-semibold">Contracts</p>
-          </div>
-          <div class="overflow-y-auto">
-            <div class="pb-4">
-              <button class="btn btn-sm w-full justify-start">
-                <span class="material-icons-outlined">summarize</span>
-                <span>Kenya</span>
-              </button>
+  <div class="min-h-screen flex flex-row relative">
+    <!--    right side-->
+    <Transition
+      enter-active-class="transition ease-in-out duration-300"
+      enter-from-class="transform -translate-x-full"
+      enter-to-class="transform translate-x-0"
+      leave-active-class="transition ease-in-out duration-300"
+      leave-from-class="transform translate-x-0"
+      leave-to-class="transform -translate-x-full"
+    >
+      <div class="h-screen w-64" v-if="!isCollapse">
+        <div
+          class='fixed px-4 py-4 z-40 w-64 block md-hidden bg-AF-600 bottom-0 top-0 inset-y-0 h-screen'>
+          <!--        klm logo-->
+          <div class="flex">
+            <div class="">
+              <p class="text-white">Welcome Linah</p>
+            </div>
+            <div
+              v-if="showArrow"
+              @click="collapseSidebar(true)"
+              class="relative btn btn-sm  left-28 bg-AF-700 hover:bg-AF-900 rounded-full w-8 h-8 flex justify-center items-center cursor-pointer">
+              <span class="material-icons-outlined text-white">arrow_back_ios</span>
             </div>
 
           </div>
 
-
-
-          <div class="">
-            <!--          Available email address-->
+          <!--        contracts per country  section-->
+          <div class="pt-4 flex flex-col">
             <div class="pb-4">
-              <button class="btn btn-sm w-full justify-start">
-                <span class="material-icons-outlined">email</span>
-                <span>Email addresses</span>
-              </button>
+              <p class="text-white font-semibold">Contracts</p>
             </div>
-            <!--          expired contracts-->
-            <div class="relative">
-              <button class="btn btn-sm w-full justify-start">
-                <span class="material-icons-outlined">running_with_errors</span>
-                <span>Expired Contracts</span>
-              </button>
-              <div class="absolute -top-2 -right-2 bg-rose-400 rounded-full flex justify-center items-centers px-2 py-1">
-                <p class="text-xs text-white">2</p>
+            <div class="overflow-y-auto">
+              <div class="pb-4">
+                <button class="btn btn-sm w-full justify-start"
+                        @click="viewContracts"
+                >
+                  <span class="material-icons-outlined">summarize</span>
+                  <span>Contracts</span>
+                </button>
               </div>
             </div>
+            <div>
+              <!--          Available email address-->
+              <div class="pb-4">
+                <button class="btn btn-sm w-full justify-start" @click="viewEmailAddress">
+                  <span class="material-icons-outlined">email</span>
+                  <span>Email addresses</span>
+                </button>
+              </div>
+              <!--          expired contracts-->
+              <div class="relative">
+                <button class="btn btn-sm w-full justify-start">
+                  <span class="material-icons-outlined">running_with_errors</span>
+                  <span>Expired Contracts</span>
+                </button>
+                <div
+                  class="absolute -top-2 -right-2 bg-rose-400 rounded-full flex justify-center items-centers px-2 py-1">
+                  <p class="text-xs text-white">2</p>
+                </div>
+              </div>
+
+            </div>
 
           </div>
 
-        </div>
+          <!--        bottom section-->
+          <div class="absolute space-y-2 bottom-0 pb-4 flex flex-col w-full">
 
-<!--        bottom section-->
-        <div class="absolute space-y-2 bottom-0 pb-4 flex flex-col w-full">
+            <div class="me-8">
+              <button class="btn btn-sm w-full justify-start">
+                <span class="material-icons-outlined">settings</span>
+                <span>Settings</span>
+              </button>
+            </div>
 
-          <div class="me-8">
-            <button class="btn btn-sm w-full justify-start">
-              <span class="material-icons-outlined">settings</span>
-              <span>Settings</span>
-            </button>
+            <!--          logout button-->
+            <div class="me-8">
+              <button class=" btn btn-sm w-full justify-start"
+                      @click="logout">
+                <span class="material-icons-outlined">logout</span>
+                <span>Log out</span>
+              </button>
+            </div>
+
           </div>
-
-          <!--          logout button-->
-          <div class="me-8">
-            <button class=" btn btn-sm w-full justify-start"
-            @click="logout">
-              <span class="material-icons-outlined">logout</span>
-              <span>Log out</span>
-            </button>
-          </div>
-
         </div>
       </div>
-    </div>
-<!--    right side-->
-    <div class="flex flex-col w-full relative">
+    </Transition>
+    <!--    right side-->
+
+      <div
+        @click="collapseSidebar(false)"
+        v-if="isCollapse" class="absolute ms-4 mt-2 btn btn-ghost btn-sm" :class="[isCollapse?  'z-30': '']">
+        <span class="material-icons-outlined">menu</span>
+      </div>
+
+    <div class="flex flex-col w-full">
       <div class="flex justify-end w-full sticky top-0 px-4 py-3">
         <div class="">
           <button
             @click="addContractEmail"
             class=" btn btn-sm w-full btn-ghost justify-start">
-            <span class="material-icons text-main-color">email</span>
-            <span> New email</span>
+            <span class="material-icons text-AF-600 ">email</span>
+            <span class="hidden md:block"> New email</span>
           </button>
         </div>
         <div>
           <button
             @click="addContract"
             class=" btn btn-sm btn-ghost w-full justify-start">
-            <span class="material-icons text-main-color">assignment_add</span>
-            <span> New contract</span>
+            <span class="material-icons text-AF-600">assignment_add</span>
+            <span class="hidden md:block"> New contract</span>
           </button>
         </div>
       </div>
-        <RouterView #default="{Component, route}">
-          <transition name="fade-away" mode="in-out">
-            <component :is="Component" :key="route.fullPath" />
-          </transition>
-
-        </RouterView>
+      <RouterView #default="{Component, route}">
+        <Transition name="page" mode="out-in">
+          <component :is="Component" :key="route.fullPath" />
+        </Transition>
+      </RouterView>
     </div>
-
   </div>
   <DialogModal :is-open="contractStore.isEmailDialogOpen.isOpen" @close-modal="contractStore.closeEmailDialog">
     <template #title>
