@@ -231,97 +231,98 @@ const showArrow = computed(() => {
       </RouterView>
     </div>
   </div>
-  <DialogModal :is-open="contractStore.isEmailDialogOpen.isOpen" @close-modal="contractStore.closeEmailDialog">
-    <template #title>
-      <div class="flex justify-end ">
-        <button class="btn btn-sm btn-ghost btn-circle"
-        @click="contractStore.closeEmailDialog()">
-          <span class="material-icons-outlined">close</span>
-        </button>
-      </div>
-    </template>
-    <template #body>
-      <div class="grid grid-cols-1 gap-3 py-1 px-5">
-        <div class="flex flex-col space-y-2">
-          <label class="label text-xs font-semibold" for="email"> Email address </label>
-          <input
-            id="page-name"
-            v-model="contractEmail"
-            :class="{
+  <Teleport to="body">
+    <DialogModal :is-open="contractStore.isEmailDialogOpen.isOpen" @close-modal="contractStore.closeEmailDialog">
+      <template #title>
+        <div class="flex justify-end ">
+          <button class="btn btn-sm btn-ghost btn-circle"
+                  @click="contractStore.closeEmailDialog()">
+            <span class="material-icons-outlined">close</span>
+          </button>
+        </div>
+      </template>
+      <template #body>
+        <div class="grid grid-cols-1 gap-3 py-1 px-5">
+          <div class="flex flex-col space-y-2">
+            <label class="label text-sm font-semibold" for="email"> Email address </label>
+            <input
+              id="page-name"
+              v-model="contractEmail"
+              :class="{
             'input-error': emailMeta.validated && !emailMeta.valid,
             'input-primary': emailMeta.validated && emailMeta.valid
           }"
-            class="input input-primary input-bordered w-full text-sm"
-            placeholder="Contract Email"
-            type="text"
-          />
-          <small v-if="emailMeta.validated && !emailMeta.valid" class="text-xs text-rose-500">
-            {{ emailErrorMessage }}
-          </small>
-          <small class="text-xs text-gray-500"
-          >This will be used as email address for contract expiry notification and it shall be sent 3 months prior to the expiry date
-          </small>
+              class="input input-primary input-bordered w-full text-sm"
+              placeholder="Contract Email"
+              type="text"
+            />
+            <small v-if="emailMeta.validated && !emailMeta.valid" class="text-xs text-rose-500">
+              {{ emailErrorMessage }}
+            </small>
+            <small class="text-xs text-gray-500"
+            >This will be used as email address for contract expiry notification and it shall be sent 3 months prior to
+              the expiry date
+            </small>
+          </div>
         </div>
-      </div>
-    </template>
-    <template #footer>
-      <div class="px-5">
-        <button
-          @click= "postEmail"
-          class="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500"
-          type="button"
-        >
-<!--          <span class="loading loading-spinner loading-sm"></span>-->
-          <span>Add Email</span>
-        </button>
-      </div>
-    </template>
-  </DialogModal>
-  <DialogModal
-    :is-open="contractStore.isLogoutDialogOpen.isOpen"
-    @closeModal="contractStore.closeLogoutDialog"
-  >
-    <template #title>
-      <div class="flex justify-center">
-        <span class="material-icons-outlined !text-6xl"> logout </span>
-      </div>
-    </template>
-    <template #body>
-      <div class="flex justify-center">
-        <h1 class="text-xl font-bold">Oh no! You're leaving...</h1>
-      </div>
-      <div class="flex justify-center">
-        <p class="text-lg font-semibold">Are you sure?</p>
-      </div>
-    </template>
-    <template #footer>
-      <div class="flex justify-center w-full flex-row">
-        <button class="btn bg-sky-200 me-5">Sign Out</button>
-        <button class="btn bg-main-color " @click="contractStore.closeLogoutDialog()">
-          Cancel
-        </button>
-      </div>
-    </template>
-  </DialogModal>
+      </template>
+      <template #footer>
+        <div class="px-5">
+          <button
+            @click="postEmail"
+            class="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-AF-600 border border-transparent rounded-md hover:bg-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500"
+            type="button"
+          >
+            <!--          <span class="loading loading-spinner loading-sm"></span>-->
+            <span>Add Email</span>
+          </button>
+        </div>
+      </template>
+    </DialogModal>
+    <DialogModal
+      :is-open="contractStore.isLogoutDialogOpen.isOpen"
+      @closeModal="contractStore.closeLogoutDialog"
+    >
+      <template #title>
+        <div class="flex justify-center">
+          <span class="material-icons-outlined !text-6xl"> logout </span>
+        </div>
+      </template>
+      <template #body>
+        <div class="flex justify-center">
+          <h1 class="text-xl font-bold">Oh no! You're leaving...</h1>
+        </div>
+        <div class="flex justify-center">
+          <p class="text-lg font-semibold">Are you sure?</p>
+        </div>
+      </template>
+      <template #footer>
+        <div class="flex justify-center w-full flex-row">
+          <button class="btn bg-sky-200 me-5">Sign Out</button>
+          <button class="btn bg-main-color " @click="contractStore.closeLogoutDialog()">
+            Cancel
+          </button>
+        </div>
+      </template>
+    </DialogModal>
+  </Teleport>
 </template>
 
 <style scoped>
-.fade-away-enter-from{
-  opacity: 0
-}
-.fade-away-enter-to{
-  opacity: 1;
-}
-.fade-away-enter-active{
-  transition: opacity 0.3s ease-in-out;
-}
-.fade-away-leave-active{
-  transition: opacity 0.3s ease-in-out;
-}
-.fade-away-leave-from{
-  opacity: 1;
-}
-.fade-away-leave-to{
+
+.page-enter-from {
   opacity: 0;
+  transform: translateY(50%);
 }
+
+.page-leave-to {
+  opacity: 0;
+  transform: translateY(50%)
+}
+
+.page-enter-active, .page-leave-active {
+  transition: all 0.35s ease-out;
+}
+
+
 </style>
