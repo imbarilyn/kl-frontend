@@ -1,13 +1,14 @@
 <script lang="ts" setup>
-import { useContractStore, useNotificationsStore} from '@/stores'
+import { useContractStore, useNotificationsStore } from '@/stores'
 import DialogModal from '@/components/DialogModal.vue'
 import { useField } from 'vee-validate'
 import { ref, watch } from 'vue'
 import { useRouter} from 'vue-router'
 
+import { computed, ref, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 
 const contractStore = useContractStore()
-const notificationsStore = useNotificationsStore()
 const router = useRouter()
 const addContractEmail = () => {
   contractStore.openAddEmailDialog()
@@ -15,12 +16,12 @@ const addContractEmail = () => {
 
 const contractEmail = ref('')
 
-const emailValidator =(value: string) => {
+const emailValidator = (value: string) => {
   if (!value) {
     return 'Email is required'
   }
 
-  const emailRegex = /^[a-zA-Z0-9._%+-]+@klm\.com$/;
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@klm\.com$/
 
   if (!emailRegex.test(value)) {
     return 'Email must be valid ending with @klm.com'
@@ -39,16 +40,30 @@ const {
 } = useField('contractEmail', emailValidator)
 
 
-watch(()=>contractEmail.value, (value)=>{
-  email.value = value  
+watch(() => contractEmail.value, (value) => {
+  email.value = value
 })
 
 const postEmail = () => {
-  if(emailMeta.valid && emailMeta.validated){
-    notificationsStore.addNotification('Email added successfully', 'success')
-  }
-  else{
-    return
+  if (emailMeta.valid && emailMeta.validated) {
+    console.log('email', contractEmail.value)
+    contractStore.addEmail(contractEmail.value)
+      .then((resp) => {
+        if (resp.result === 'success') {
+          showAlert({ message: 'Email added successfully', type: 'success' })
+        } else {
+          showAlert({ message: 'Email not added', type: 'error' })
+        }
+      })
+      .catch((error) => {
+        showAlert({ message: 'Email not added', type: 'error' })
+      })
+      .finally(() => {
+        contractEmail.value = ''
+        contractStore.closeEmailDialog()
+      })
+  } else {
+    showAlert({ message: 'Enter valid email', type: 'error' })
   }
 }
 
