@@ -4,7 +4,10 @@ import { useNotificationsStore } from '@/stores/notificationStore'
 
 const BASE_URL = import.meta.env.VITE_BASE_URL as string
 
-
+export interface EmailAddressPayload {
+  id: number
+  email: string
+}
 export const  useContractStore  = defineStore('contractStore', ()=>{
   const appIsFetching = ref<boolean>(false)
   const  isEmailDialogOpen = ref({
@@ -18,8 +21,6 @@ export const  useContractStore  = defineStore('contractStore', ()=>{
   const isDeleteDialogOpen = ref({
     isOpen: false
   })
-
-
 
 
   const openAddEmailDialog
@@ -155,13 +156,32 @@ export const  useContractStore  = defineStore('contractStore', ()=>{
  async function getEmailAddresses (){
     try{
       const response  = await fetch(`${BASE_URL}/emails`)
-      return  await response.json()
+      const resp =  await response.json()
+      return {
+        result: resp.result,
+        data: resp.emails
+      }
+
     }
     catch(error) {
       console.log(error)
     }
  }
 
+async function editEmail(emailPayload: EmailAddressPayload){
+    console.log('Email address to be edited', emailPayload)
+    try {
+      const response = await fetch(`http://localhost:8000/update-email/${emailPayload.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        mode: 'cors',
+        body: JSON.stringify({
+          email: emailPayload.email,
+          id: emailPayload.id
+        })
+      })
 
 
   return{
