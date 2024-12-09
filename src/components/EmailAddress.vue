@@ -4,7 +4,38 @@ import { useContractStore } from '@/stores'
 
 const contractStore = useContractStore()
 
-const emailAddressesArray = ref<string[]>([])
+
+const contractEmail = ref<string>('')
+const emailAddressesArray = ref<EmailAddressPayload []>([])
+const openDialog = ref<boolean>(false)
+
+const emailValidator = (value: string) => {
+  if (!value) {
+    return 'Email is required'
+  }
+
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@klm\.com$/
+
+  if (!emailRegex.test(value)) {
+    return 'Email must be valid ending with @klm.com'
+  }
+
+  if (value.length > 50) {
+    return 'Email must be less than 50 characters'
+  }
+  return true
+}
+
+const {
+  value: email,
+  errorMessage: emailErrorMessage,
+  meta: emailMeta
+} = useField('contractEmail', emailValidator)
+
+
+watch(() => contractEmail.value, (value) => {
+  email.value = value
+})
 
 onMounted(() => {
   contractStore.getEmailAddresses()
