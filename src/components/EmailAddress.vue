@@ -50,6 +50,17 @@ onMounted(() => {
         console.log(emailAddressesArray.value)
       }
     })
+    .catch(error => {
+      console.log(error)
+      return
+    })
+})
+const selectedEmail = ref<EmailAddressPayload | null>(null)
+const editEmail = (emailId: Number) => {
+  selectedEmail.value = emailAddressesArray.value.find(email => email.id === emailId) as EmailAddressPayload
+  contractEmail.value = selectedEmail.value.email
+  openDialog.value = true
+}
 
 
 })
