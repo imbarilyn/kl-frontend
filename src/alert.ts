@@ -16,7 +16,7 @@ export const showAlert = (alertPayload: AlertType )=>{
     })
   }
 
-  else {
+  else if(alertPayload.type === 'error'){
     Swal.fire({
       title: 'Error',
       text: alertPayload.message,
@@ -24,5 +24,17 @@ export const showAlert = (alertPayload: AlertType )=>{
       confirmButtonText: 'Okay',
       timer: 1500
     })
+  }
+  else if(alertPayload.type === 'info') {
+    Swal.fire({
+      title: 'Info',
+      text: alertPayload.message,
+      icon: 'info',
+      confirmButtonText: 'Okay',
+      timer: 1500
+    })
+  }
+  else{
+    return
   }
 }
