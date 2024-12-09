@@ -183,6 +183,47 @@ async function editEmail(emailPayload: EmailAddressPayload){
         })
       })
 
+      // console.log(response)
+      const resp = await response.json()
+      return {
+        result: resp.result,
+        message: resp.message
+      }
+    }
+    catch (e) {
+      return {
+        result: 'fail',
+        message: 'An error occurred while trying to edit email'
+      }
+    }
+}
+
+
+async function deleteEmail(email: string) {
+  console.log('Email address to be deleted', email)
+  const notification = useNotificationsStore()
+  try {
+    const response = await fetch(`${BASE_URL}/delete-email/${email}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      mode: 'cors',
+      body: JSON.stringify({ email })
+    })
+    const resp = await response.json()
+    return {
+      result: resp.result,
+      message: resp.message
+    }
+  } catch (e) {
+    notification.addNotification('Unable to delete email', 'error')
+    return {
+      result: 'fail',
+      message: 'An error occurred while trying to delete email'
+    }
+  }
+}
 
   return{
     isEmailDialogOpen,
@@ -200,6 +241,8 @@ async function editEmail(emailPayload: EmailAddressPayload){
     closeDeleteDialog,
     openDeleteDialog,
     addEmail,
-    getEmailAddresses
+    getEmailAddresses,
+    editEmail,
+    appIsFetching
   }
 })
