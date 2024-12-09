@@ -97,6 +97,13 @@ const collapseSidebar = (value: boolean) => {
   isCollapse.value = value
 }
 
+const route = useRoute()
+// allow collapse only on DataTable
+const showArrow = computed(() => {
+  return route.name === 'DataTable'
+
+
+})
 </script>
 
 
