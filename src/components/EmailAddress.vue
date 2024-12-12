@@ -11,7 +11,7 @@ const contractStore = useContractStore()
 
 const contractEmail = ref<string>('')
 const emailAddressesArray = ref<EmailAddressPayload []>([])
-const openDialog = ref<boolean>(false)
+const openEditEmailDialog = ref<boolean>(false)
 
 const emailValidator = (value: string) => {
   if (!value) {
@@ -59,7 +59,7 @@ const selectedEmail = ref<EmailAddressPayload | null>(null)
 const editEmail = (emailId: Number) => {
   selectedEmail.value = emailAddressesArray.value.find(email => email.id === emailId) as EmailAddressPayload
   contractEmail.value = selectedEmail.value.email
-  openDialog.value = true
+  openEditEmailDialog.value = true
 }
 
 const emailPayLoad = ref<EmailAddressPayload>({
@@ -93,7 +93,7 @@ const updateEmail = () => {
             // closeDialog()
             setTimeout(() => {
               emailUpdateLoading.value = false
-              closeDialog()
+              closeEditEmailDialog()
               window.location.reload()
             }, 1000)
           } else {
@@ -119,12 +119,61 @@ const updateEmail = () => {
   }
 }
 
-const deleteEmail = (email: Number) => {
-  console.log('Delete email')
+const isDeleteLoading = ref<boolean>(false)
+const  openDeleteEmailDialog = ref<boolean>(false)
+const deleteEmail = (emailId: Number) => {
+  selectedEmail.value = emailAddressesArray.value.find(email => email.id === emailId) as EmailAddressPayload
+  openDeleteEmailDialog.value = true
 }
 
-const closeDialog = () => {
-  openDialog.value = false
+const closeDeleteEmailDialog = () =>{
+  openDeleteEmailDialog.value = false
+}
+
+const closeEditEmailDialog = () => {
+  openEditEmailDialog.value = false
+}
+
+const handleDelete = () => {
+  isDeleteLoading.value = true
+  emailPayLoad.value = {
+    email: selectedEmail.value?.email as string,
+    id: selectedEmail.value?.id as number
+  }
+  contractStore.deleteEmail(emailPayLoad.value)
+    .then(resp =>{
+      if(resp.result === 'success'){
+        showAlert({
+          message: 'Email address deleted successfully',
+          type: 'success'
+        })
+        setTimeout(()=>{
+          isDeleteLoading.value = false
+          closeDeleteEmailDialog()
+          window.location.reload()
+        }, 2000)
+      }
+      else{
+        showAlert({
+          message: `${resp.message}, please try again`,
+          type: 'error'
+        })
+      }
+    })
+    .catch(err => {
+      console.log(err)
+      showAlert({
+        message: 'Unable to delete email address, please try again',
+        type: 'error'
+      })
+    })
+    .finally(()=>{
+      isDeleteLoading.value = false
+    })
+
+
+
+
 }
 </script>
 
@@ -158,11 +207,11 @@ const closeDialog = () => {
 
     </div>
     <Teleport to="body">
-      <DialogModal :is-open="openDialog" @close-modal="closeDialog">
+      <DialogModal :is-open="openEditEmailDialog" @close-modal="closeEditEmailDialog">
         <template #title>
           <div class="flex justify-end ">
             <button class="btn btn-sm btn-ghost btn-circle"
-                    @click="closeDialog">
+                    @click="closeEditEmailDialog">
               <span class="material-icons-outlined">close</span>
             </button>
           </div>
@@ -204,6 +253,39 @@ const closeDialog = () => {
             </button>
           </div>
         </template>
+      </DialogModal>
+
+      <DialogModal :is-open=" openDeleteEmailDialog" @close-modal="closeDeleteEmailDialog">
+        <template #title>
+          <div class="flex justify-center items-center">
+            <button class=" btn btn-sm btn-ghost bg-rose-300 btn-circle">
+              <span class="material-icons-outlined text-red-500">error_outline</span>
+            </button>
+
+          </div>
+
+        </template>
+        <template #body>
+          <div class="space-y-2">
+            <p class="text-center text-normal font-semibold">Deleting {{selectedEmail?.email}} contract</p>
+            <div class="text-sm">
+              <p>Are you sure you want to delete <span class="text-rose-500">{{selectedEmail?.email}}?</span></p>
+              <p>Once deleted cannot be recovered</p>
+            </div>
+
+          </div>
+        </template>
+        <template #footer>
+          <div class="flex justify-center gap-10">
+            <button class="btn btn-sm btn-ghost bg-slate-200 px-8" @click="closeDeleteEmailDialog">Cancel</button>
+            <button class="btn btn-sm btn-ghost text-white bg-rose-500 px-8" @click="handleDelete">
+              <span v-if="isDeleteLoading" class="loading loading-spinner loading-md"></span>
+              <span v-else>Delete</span>
+            </button>
+
+          </div>
+        </template>
+
       </DialogModal>
     </Teleport>
 
