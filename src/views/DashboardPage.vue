@@ -47,14 +47,15 @@ const postEmail = () => {
     console.log('email', contractEmail.value)
     contractStore.addEmail(contractEmail.value)
       .then((resp) => {
+        console.log('resp--', resp.message)
         if (resp.result === 'success') {
           showAlert({ message: 'Email added successfully', type: 'success' })
         } else {
-          showAlert({ message: 'Email not added', type: 'error' })
+          showAlert({ message: `${resp.message}`, type: 'error' })
         }
       })
       .catch((error) => {
-        showAlert({ message: 'Email not added', type: 'error' })
+        showAlert({ message: 'Email not added, please try again', type: 'error' })
       })
       .finally(() => {
         contractEmail.value = ''
