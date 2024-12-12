@@ -199,17 +199,16 @@ async function editEmail(emailPayload: EmailAddressPayload){
 }
 
 
-async function deleteEmail(email: string) {
-  console.log('Email address to be deleted', email)
+async function deleteEmail(emailPayload: EmailAddressPayload){
+  console.log('Email address to be deleted', emailPayload)
   const notification = useNotificationsStore()
   try {
-    const response = await fetch(`${BASE_URL}/delete-email/${email}`, {
+    const response = await fetch(`${BASE_URL}/delete-email/${emailPayload.id}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json'
       },
       mode: 'cors',
-      body: JSON.stringify({ email })
     })
     const resp = await response.json()
     return {
@@ -243,6 +242,7 @@ async function deleteEmail(email: string) {
     addEmail,
     getEmailAddresses,
     editEmail,
-    appIsFetching
+    appIsFetching,
+    deleteEmail
   }
 })
