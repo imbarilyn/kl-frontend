@@ -6,7 +6,24 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      redirect: '/dashboard'
+      redirect: '/auth'
+    },
+    {
+      name: 'User',
+      path: '/auth',
+      component: ()=>import ('@/views/auth/UserPage.vue'),
+      children: [
+        {
+          name: 'Login',
+          path: '',
+          component: ()=>import('@/views/auth/LoginPage.vue')
+        },
+        {
+          name: 'Forgot-Password',
+          path: 'forgot-password',
+          component: ()=>import('@/views/auth/ForgotPasswordPage.vue')
+        }
+      ]
     },
     {
       name: 'Home',
