@@ -19,11 +19,11 @@ const emailValidator = (value: string) => {
     return 'Email is required'
   }
 
-  const emailRegex = /^[a-zA-Z0-9._%+-]+@klm\.com$/
-
-  if (!emailRegex.test(value)) {
-    return 'Email must be valid ending with @klm.com'
-  }
+  // const emailRegex = /^[a-zA-Z0-9._%+-]+@klm\.com$/
+  //
+  // if (!emailRegex.test(value)) {
+  //   return 'Email must be valid ending with @klm.com'
+  // }
 
   if (value.length > 50) {
     return 'Email must be less than 50 characters'
@@ -42,6 +42,7 @@ watch(() => contractEmail.value, (value) => {
   email.value = value
 })
 
+// const isLoading
 const postEmail = () => {
   if (emailMeta.valid && emailMeta.validated) {
     console.log('email', contractEmail.value)
@@ -119,9 +120,9 @@ const showArrow = computed(() => {
       leave-from-class="transform translate-x-0"
       leave-to-class="transform -translate-x-full"
     >
-      <div class="h-screen w-64" v-if="!isCollapse">
+      <div class="h-screen z-20 w-64" v-if="!isCollapse">
         <div
-          class='fixed px-4 py-4 z-40 w-64 block md-hidden bg-AF-600 bottom-0 top-0 inset-y-0 h-screen'>
+          class='fixed px-4 py-4 z-40 w-64 block md-hidden  bg-AF-600 bottom-0 top-0 inset-y-0 h-screen'>
           <!--        klm logo-->
           <div class="flex">
             <div class="">
@@ -200,34 +201,41 @@ const showArrow = computed(() => {
     </Transition>
     <!--    right side-->
 
-      <div
-        @click="collapseSidebar(false)"
-        v-if="isCollapse" class="absolute ms-4 mt-2 btn btn-ghost btn-sm" :class="[isCollapse?  'z-30': '']">
-        <span class="material-icons-outlined">menu</span>
-      </div>
+    <div
+      @click="collapseSidebar(false)"
+      v-if="isCollapse" class="absolute ms-4 mt-2 btn btn-ghost btn-sm" :class="[isCollapse?  'z-30': '']">
+      <span class="material-icons-outlined">menu</span>
+    </div>
 
-    <div class="flex flex-col w-full">
-      <div class="flex justify-end w-full sticky top-0 px-4 py-3">
-        <div class="">
-          <button
-            @click="addContractEmail"
-            class=" btn btn-sm w-full btn-ghost justify-start">
-            <span class="material-icons text-AF-600 ">email</span>
-            <span class="hidden md:block"> New email</span>
-          </button>
+    <div class="flex flex-col w-full ">
+      <div class="flex justify-between w-full sticky bg-white z-10 top-0 px-4 py-3">
+        <div class="md:ms-24 ms-10 sticky top-0 bg-white" >
+          <h1 class="text-4xl text-AF-500 font-medium">{{route.meta.title}}</h1>
         </div>
-        <div>
-          <button
-            @click="addContract"
-            class=" btn btn-sm btn-ghost w-full justify-start">
-            <span class="material-icons text-AF-600">assignment_add</span>
-            <span class="hidden md:block"> New contract</span>
-          </button>
+        <div class="flex ">
+          <div class="">
+            <button
+              @click="addContractEmail"
+              class=" btn btn-sm w-full btn-ghost justify-start">
+              <span class="material-icons text-AF-600 ">email</span>
+              <span class="hidden md:block"> New email</span>
+            </button>
+          </div>
+          <div>
+            <button
+              @click="addContract"
+              class=" btn btn-sm btn-ghost w-full justify-start">
+              <span class="material-icons text-AF-600">assignment_add</span>
+              <span class="hidden md:block"> New contract</span>
+            </button>
+          </div>
         </div>
       </div>
       <RouterView #default="{Component, route}">
-        <Transition name="page" mode="out-in">
-          <component :is="Component" :key="route.fullPath" />
+        <Transition name="page" mode="out-in" appear>
+          <template v-if="Component">
+            <component :is="Component" :key="route.fullPath" />
+          </template>
         </Transition>
       </RouterView>
     </div>

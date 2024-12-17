@@ -19,6 +19,7 @@ const emailValidator = (value: string) => {
   }
 
   const emailRegex = /^[a-zA-Z0-9._%+-]+@klm\.com$/
+  // const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
   if (!emailRegex.test(value)) {
     return 'Email must be valid ending with @klm.com'
@@ -29,7 +30,6 @@ const emailValidator = (value: string) => {
   }
   return true
 }
-
 const {
   value: email,
   errorMessage: emailErrorMessage,
@@ -40,7 +40,7 @@ const {
 watch(() => contractEmail.value, (value) => {
   email.value = value
 })
-
+const noData = ref<boolean>(false)
 onMounted(() => {
   contractStore.getEmailAddresses()
     .then(response => {
@@ -48,10 +48,13 @@ onMounted(() => {
       if (response?.data) {
         emailAddressesArray.value = response.data
         console.log(emailAddressesArray.value)
+      } else {
+        noData.value = true
       }
     })
     .catch(error => {
       console.log(error)
+      noData.value = true
       return
     })
 })
@@ -120,13 +123,13 @@ const updateEmail = () => {
 }
 
 const isDeleteLoading = ref<boolean>(false)
-const  openDeleteEmailDialog = ref<boolean>(false)
+const openDeleteEmailDialog = ref<boolean>(false)
 const deleteEmail = (emailId: Number) => {
   selectedEmail.value = emailAddressesArray.value.find(email => email.id === emailId) as EmailAddressPayload
   openDeleteEmailDialog.value = true
 }
 
-const closeDeleteEmailDialog = () =>{
+const closeDeleteEmailDialog = () => {
   openDeleteEmailDialog.value = false
 }
 
@@ -141,19 +144,18 @@ const handleDelete = () => {
     id: selectedEmail.value?.id as number
   }
   contractStore.deleteEmail(emailPayLoad.value)
-    .then(resp =>{
-      if(resp.result === 'success'){
+    .then(resp => {
+      if (resp.result === 'success') {
         showAlert({
           message: 'Email address deleted successfully',
           type: 'success'
         })
-        setTimeout(()=>{
+        setTimeout(() => {
           isDeleteLoading.value = false
           closeDeleteEmailDialog()
           window.location.reload()
         }, 2000)
-      }
-      else{
+      } else {
         showAlert({
           message: `${resp.message}, please try again`,
           type: 'error'
@@ -167,11 +169,9 @@ const handleDelete = () => {
         type: 'error'
       })
     })
-    .finally(()=>{
+    .finally(() => {
       isDeleteLoading.value = false
     })
-
-
 
 
 }
@@ -179,33 +179,34 @@ const handleDelete = () => {
 
 <template>
   <div class="w-full flex">
-    <div v-for="email in emailAddressesArray" :key="email.id">
-      <div class="card bg-blue-00 w-80 ms-28 shadow-xl">
-        <figure>
-          <img
-            src="../assets/images/email.jpg"
-            class=""
-            alt="email" />
-        </figure>
-        <div class="space-y-4 py-4 px-4">
-          <h2 class="pt-4 font-bold">Email address</h2>
-          <div class="flex justify-between">
-            <span class="text-md">{{ email.email }}</span>
-            <div class="flex justify-end ">
-              <button class="btn btn-sm btn-ghost" @click.stop="editEmail(email.id)">
-                <span class="material-icons-outlined text-AF-500">edit</span>
-              </button>
-              <button class="btn btn-sm btn-ghost" @click.stop="deleteEmail(email.id)">
-                <span class="material-icons-outlined text-rose-500">delete</span>
-              </button>
+
+      <div v-for="email in emailAddressesArray" :key="email.id">
+        <div class="card bg-blue-00 w-80 ms-28 shadow-xl">
+          <figure>
+            <img
+              src="../../public/images/email.jpg"
+              class=""
+              alt="email" />
+          </figure>
+          <div class="space-y-4 py-4 px-4">
+            <h2 class="pt-4 font-bold">Email address</h2>
+            <div class="flex justify-between">
+              <span class="text-md">{{ email.email }}</span>
+              <div class="flex justify-end ">
+                <button class="btn btn-sm btn-ghost" @click.stop="editEmail(email.id)">
+                  <span class="material-icons-outlined text-AF-500">edit</span>
+                </button>
+                <button class="btn btn-sm btn-ghost" @click.stop="deleteEmail(email.id)">
+                  <span class="material-icons-outlined text-rose-500">delete</span>
+                </button>
+              </div>
+
             </div>
 
           </div>
-
         </div>
       </div>
 
-    </div>
     <Teleport to="body">
       <DialogModal :is-open="openEditEmailDialog" @close-modal="closeEditEmailDialog">
         <template #title>
@@ -248,7 +249,7 @@ const handleDelete = () => {
               type="button"
               :disabled="emailMeta.validated && !emailMeta.valid"
             >
-              <span  v-if="emailUpdateLoading" class="loading loading-spinner loading-sm"></span>
+              <span v-if="emailUpdateLoading" class="loading loading-spinner loading-sm"></span>
               <span v-else>Update Email</span>
             </button>
           </div>
@@ -267,9 +268,9 @@ const handleDelete = () => {
         </template>
         <template #body>
           <div class="space-y-2">
-            <p class="text-center text-normal font-semibold">Deleting {{selectedEmail?.email}} contract</p>
+            <p class="text-center text-normal font-semibold">Deleting {{ selectedEmail?.email }} contract</p>
             <div class="text-sm">
-              <p>Are you sure you want to delete <span class="text-rose-500">{{selectedEmail?.email}}?</span></p>
+              <p>Are you sure you want to delete <span class="text-rose-500">{{ selectedEmail?.email }}?</span></p>
               <p>Once deleted cannot be recovered</p>
             </div>
 
