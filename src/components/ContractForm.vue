@@ -188,7 +188,7 @@ const addContract = () => {
     formData.append('start_date', contractData.startDate)
     formData.append('end_date', contractData.expiryDate)
     formData.append('file', fileUpload.value[0])
-    formData.append('status', 'active')
+    // formData.append('status', 'active')
     
     contractStore.addContract(formData)
       .then((resp)=>{
