@@ -33,7 +33,11 @@ const router = createRouter({
         {
           name: 'DataTable',
           path: '',
-          component: ()=>import ('@/components/DataTables.vue')
+          component: ()=>import ('@/components/DataTables.vue'),
+          meta: {
+            requiresAuth: true,
+            title: 'Contract Section'
+          }
         },
         {
           name: 'EditContract',
@@ -48,12 +52,20 @@ const router = createRouter({
         {
           name: 'addContract',
           path: 'add-contract',
-          component: ()=>import ('@/components/ContractForm.vue')
+          component: ()=>import ('@/components/ContractForm.vue'),
+          meta: {
+            requiresAuth: true,
+            title: 'Create Contract Section'
+          }
         },
         {
           name: 'email',
           path: 'view-email',
-          component: ()=>import ('@/components/EmailAddress.vue')
+          component: ()=>import ('@/components/EmailAddress.vue'),
+          meta: {
+            requiresAuth: true,
+            title: 'Create Contract Section'
+          }
         }
       ]
     },
