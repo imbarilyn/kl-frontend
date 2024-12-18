@@ -16,9 +16,9 @@
           <img src="/images/contract.png" alt="contract-image">
         </div>
       </div>
-      <div class="md:hidden flex py-4 justify-start text-white">
-        <span class="material-icons-outlined">chevron_left</span>
-        <span>Forgot Password</span>
+      <div class="md:hidden flex py-6 justify-start text-white ps-4">
+        <router-link to="/auth/forgot-password" class="material-icons-outlined cursor-pointer btn btn-sm btn-ghost btn-circle">chevron_left</router-link>
+        <span class="text-sm ps-4">Login</span>
       </div>
     </div>
     <div
@@ -32,12 +32,12 @@
             <div class="grid md:gap-y-4">
               <div class="flex flex-col md:space-y-1">
                 <div class="flex flex-col space-y-5">
+                  <div class="flex  flex-col justify-start pt-8 md:hidden">
+                    <p class="!text-2xl font-semibold text-AF-500">Welcome Back</p>
+                    <span class="text-sm">Hello there, login to continue</span>
+                  </div>
 
                   <div class="md:hidden mx-auto block">
-                    <div class="text-white">
-                      <p class="!text-5xl font-semibold">Welcome Back</p>
-                      <span class="text-lg">Hello there, login to continue</span>
-                    </div>
                     <div class="lg:w-80 w-72">
                       <img src="/images/contract.png" alt="contract-image">
                     </div>
