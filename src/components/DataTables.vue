@@ -76,9 +76,9 @@ const exceptedColumns = Array.from({ length: columns.length - 1 }, (v, k) => {
 
 
 $(document).ready(function() {
-  const tableId = 'myTable'
-  const tableInit: boolean = $.fn.DataTable.isDataTable(`#${tableId}`)
-  console.log('tableInit', tableInit)
+  // const tableId = 'myTable'
+  // const tableInit: boolean = $.fn.DataTable.isDataTable(`#${tableId}`)
+  // console.log('tableInit', tableInit)
   // if(!tableInit){
   //   $(`#${tableId}`).DataTable().destroy()
   // }

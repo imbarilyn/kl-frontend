@@ -181,7 +181,7 @@ const handleDelete = () => {
   <div class="w-full flex">
 
       <div v-for="email in emailAddressesArray" :key="email.id">
-        <div class="card bg-blue-00 w-80 ms-28 shadow-xl">
+        <div class="card bg-blue-00 w-72 max-w-80 ms-28 shadow-xl">
           <figure>
             <img
               src="../../public/images/email.jpg"
@@ -189,10 +189,12 @@ const handleDelete = () => {
               alt="email" />
           </figure>
           <div class="space-y-4 py-4 px-4">
-            <h2 class="pt-4 font-bold">Email address</h2>
-            <div class="flex justify-between">
-              <span class="text-md">{{ email.email }}</span>
-              <div class="flex justify-end ">
+            <div class="flex items-center justify-between">
+              <div>
+                <h2 class="pt-4 font-bold">Email address</h2>
+              </div>
+
+              <div class=" pt-2">
                 <button class="btn btn-sm btn-ghost" @click.stop="editEmail(email.id)">
                   <span class="material-icons-outlined text-AF-500">edit</span>
                 </button>
@@ -200,6 +202,18 @@ const handleDelete = () => {
                   <span class="material-icons-outlined text-rose-500">delete</span>
                 </button>
               </div>
+            </div>
+
+            <div class="flex justify-between">
+              <span class="text-sm">{{ email.email }}</span>
+<!--              <div class="flex justify-end ">-->
+<!--                <button class="btn btn-sm btn-ghost" @click.stop="editEmail(email.id)">-->
+<!--                  <span class="material-icons-outlined text-AF-500">edit</span>-->
+<!--                </button>-->
+<!--                <button class="btn btn-sm btn-ghost" @click.stop="deleteEmail(email.id)">-->
+<!--                  <span class="material-icons-outlined text-rose-500">delete</span>-->
+<!--                </button>-->
+<!--              </div>-->
 
             </div>
 

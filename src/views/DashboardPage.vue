@@ -18,12 +18,12 @@ const emailValidator = (value: string) => {
   if (!value) {
     return 'Email is required'
   }
+console.log()
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@klm\.com$/
 
-  // const emailRegex = /^[a-zA-Z0-9._%+-]+@klm\.com$/
-  //
-  // if (!emailRegex.test(value)) {
-  //   return 'Email must be valid ending with @klm.com'
-  // }
+  if (!emailRegex.test(value)) {
+    return 'Email must be valid ending with @klm.com'
+  }
 
   if (value.length > 50) {
     return 'Email must be less than 50 characters'
