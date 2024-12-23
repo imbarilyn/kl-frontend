@@ -53,6 +53,10 @@ watch(()=>selected.value, (value)=>{
     emits('comboChoice', value)
   }
 })
+
+const getLists = ()=>{
+  console.log('Hello there!!')
+}
 </script>
 
 
