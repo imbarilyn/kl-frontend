@@ -43,14 +43,25 @@
                     </div>
                   </div>
                   <div class="flex justify-center items-center">
+                    <span class="material-icons !text-4xl pt-3 text-AF-500 pe-3">flight_takeoff</span>
                     <img src="/images/klm-logo.png" alt="klm-logo" class="w-20">
+                  </div>
+                  <div>
+                    <label class="label font-semibold text-sm" for="email">Username </label>
+                    <input
+                      id="username"
+                      class="input input-primary input-bordered  border-1 border-AF-500 w-full text-sm"
+                      placeholder="John Doe"
+                      required
+                      type="text"
+                    />
                   </div>
                   <div>
                     <label class="label font-semibold text-sm" for="email">Email address </label>
                     <input
                       id="email"
                       class="input input-primary input-bordered  border-1 border-AF-500 w-full text-sm"
-                      placeholder="John Doe"
+                      placeholder="Johndoe@klm.com"
                       required
                       type="email"
                     />
@@ -67,7 +78,6 @@
                       <input
                         id="email"
                         class="input input-primary input-bordered border-1 border-AF-500  w-full text-sm"
-                        placeholder="John Doe"
                         required
                         type="password"
                       />
