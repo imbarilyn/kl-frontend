@@ -5,6 +5,7 @@ import { showAlert } from '@/alert'
 import DialogModal from '@/components/DialogModal.vue'
 import { useField } from 'vee-validate'
 import { type EmailAddressPayload } from '@/stores'
+import LoadingSpinner from '@/components/LoadingSpinner.vue'
 
 const contractStore = useContractStore()
 
@@ -41,22 +42,35 @@ watch(() => contractEmail.value, (value) => {
   email.value = value
 })
 const noData = ref<boolean>(false)
-onMounted(() => {
+const isError = ref<boolean>(false)
+const appIsLoading = ref<boolean>(false)
+const loadEmails = () => {
+  appIsLoading.value = true
   contractStore.getEmailAddresses()
     .then(response => {
-      console.log(response)
+      // console.log(response)
       if (response?.data) {
         emailAddressesArray.value = response.data
         console.log(emailAddressesArray.value)
       } else {
+        console.log('No email just yet')
         noData.value = true
       }
     })
     .catch(error => {
       console.log(error)
-      noData.value = true
+      isError.value = true
       return
     })
+    .finally(() => {
+      setTimeout(() => {
+        appIsLoading.value = false
+      }, 2000)
+    })
+}
+onMounted(() => {
+  loadEmails()
+
 })
 const selectedEmail = ref<EmailAddressPayload | null>(null)
 const editEmail = (emailId: Number) => {
@@ -172,54 +186,82 @@ const handleDelete = () => {
     .finally(() => {
       isDeleteLoading.value = false
     })
+}
 
-
+const reLoadEmails = () => {
+  loadEmails()
 }
 </script>
 
 <template>
-  <div class="w-full flex">
+  <div class="w-full flex h-full">
+    <div v-if="!appIsLoading" class="flex">
+      <div v-if="!noData">
+        <div v-for="email in emailAddressesArray" :key="email.id">
+          <div class="card bg-blue-00 w-72 max-w-80 ms-28 shadow-xl">
+            <figure>
+              <img
+                src="../../public/images/email.jpg"
+                class=""
+                alt="email" />
+            </figure>
+            <div class="space-y-4 py-4 px-4">
+              <div class="flex items-center justify-between">
+                <div>
+                  <h2 class="pt-4 font-bold">Email address</h2>
+                </div>
 
-      <div v-for="email in emailAddressesArray" :key="email.id">
-        <div class="card bg-blue-00 w-72 max-w-80 ms-28 shadow-xl">
-          <figure>
-            <img
-              src="../../public/images/email.jpg"
-              class=""
-              alt="email" />
-          </figure>
-          <div class="space-y-4 py-4 px-4">
-            <div class="flex items-center justify-between">
-              <div>
-                <h2 class="pt-4 font-bold">Email address</h2>
+                <div class=" pt-2">
+                  <button class="btn btn-sm btn-ghost" @click.stop="editEmail(email.id)">
+                    <span class="material-icons-outlined text-AF-500">edit</span>
+                  </button>
+                  <button class="btn btn-sm btn-ghost" @click.stop="deleteEmail(email.id)">
+                    <span class="material-icons-outlined text-rose-500">delete</span>
+                  </button>
+                </div>
               </div>
 
-              <div class=" pt-2">
-                <button class="btn btn-sm btn-ghost" @click.stop="editEmail(email.id)">
-                  <span class="material-icons-outlined text-AF-500">edit</span>
-                </button>
-                <button class="btn btn-sm btn-ghost" @click.stop="deleteEmail(email.id)">
-                  <span class="material-icons-outlined text-rose-500">delete</span>
-                </button>
+              <div class="flex justify-between">
+                <span class="text-sm">{{ email.email }}</span>
+                <!--              <div class="flex justify-end ">-->
+                <!--                <button class="btn btn-sm btn-ghost" @click.stop="editEmail(email.id)">-->
+                <!--                  <span class="material-icons-outlined text-AF-500">edit</span>-->
+                <!--                </button>-->
+                <!--                <button class="btn btn-sm btn-ghost" @click.stop="deleteEmail(email.id)">-->
+                <!--                  <span class="material-icons-outlined text-rose-500">delete</span>-->
+                <!--                </button>-->
+                <!--              </div>-->
+
               </div>
-            </div>
-
-            <div class="flex justify-between">
-              <span class="text-sm">{{ email.email }}</span>
-<!--              <div class="flex justify-end ">-->
-<!--                <button class="btn btn-sm btn-ghost" @click.stop="editEmail(email.id)">-->
-<!--                  <span class="material-icons-outlined text-AF-500">edit</span>-->
-<!--                </button>-->
-<!--                <button class="btn btn-sm btn-ghost" @click.stop="deleteEmail(email.id)">-->
-<!--                  <span class="material-icons-outlined text-rose-500">delete</span>-->
-<!--                </button>-->
-<!--              </div>-->
 
             </div>
-
           </div>
         </div>
       </div>
+
+      <!--    if no emails just yet-->
+      <div v-else>
+        <div class="flex justify-center flex-col items-center h-full">
+          <img src="../../public/images/noData.jpg" alt="no-data" class="w-1/4">
+          <div class="text-center" v-if="isError">
+            <h1 class="text-3xl font-bold text-neutral-900">Opps! there is an error</h1>
+            <p class="text-neutral-500 pb-2">Kindly refresh the page to try again</p>
+            <button class="btn btn-sm bg-AF-400 hover:bg-AF-800" @click="reLoadEmails">
+              <span class="material-icons-outlined text-white">refresh</span>
+            </button>
+          </div>
+          <div v-else class="text-center">
+            <h1 class="text-3xl font-bold text-neutral-900">No emails just yet</h1>
+            <p class="text-neutral-500">There are no emails yet, you could add a maximum of 3 emails</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div v-else class="flex justify-center items-center w-full h-full">
+      <LoadingSpinner />
+    </div>
+
+
 
     <Teleport to="body">
       <DialogModal :is-open="openEditEmailDialog" @close-modal="closeEditEmailDialog">
