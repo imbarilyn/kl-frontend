@@ -213,7 +213,7 @@ const showArrow = computed(() => {
           <h1 class="text-4xl text-AF-500 font-medium">{{route.meta.title}}</h1>
         </div>
         <div class="flex ">
-          <div class="">
+          <div :class="{'me-4': !isCollapse}">
             <button
               @click="addContractEmail"
               class=" btn btn-sm w-full btn-ghost justify-start">
@@ -221,7 +221,7 @@ const showArrow = computed(() => {
               <span class="hidden md:block"> New email</span>
             </button>
           </div>
-          <div>
+          <div v-if="!isCollapse">
             <button
               @click="addContract"
               class=" btn btn-sm btn-ghost w-full justify-start">

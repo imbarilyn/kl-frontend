@@ -70,7 +70,7 @@ const columns = [
 
 const exceptedColumns = Array.from({ length: columns.length - 1 }, (v, k) => {
   const arrayLikeObject = { length: columns.length - 1 }
-  console.log(arrayLikeObject)
+  // console.log(arrayLikeObject)
   return k
 })
 
