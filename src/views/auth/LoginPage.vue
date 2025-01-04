@@ -1,4 +1,107 @@
 <script setup lang="ts">
+import { useField } from 'vee-validate'
+import { computed, reactive, watch } from 'vue'
+import { useAuthStore } from '@/stores/authStore'
+import { useRouter} from 'vue-router'
+import { useNotificationsStore } from '@/stores'
+
+
+const loginPayload = reactive({
+  username: '',
+  email: '',
+  password: ''
+})
+
+const authStore = useAuthStore()
+const notificationStore = useNotificationsStore()
+const router = useRouter()
+const emailValidator = (value: string) => {
+  if (!value) {
+    return 'Email is required'
+  }
+
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@klm\.com$/
+  // const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+  if (!emailRegex.test(value)) {
+    return 'Email must be valid ending with @klm.com'
+  }
+
+  if (value.length > 50) {
+    return 'Email must be less than 30 characters'
+  }
+  return true
+}
+const {
+  value: email,
+  errorMessage: emailErrorMessage,
+  meta: emailMeta
+} = useField('email', emailValidator)
+
+
+watch(() => loginPayload.email, (value) => {
+  email.value = value
+})
+
+
+const passwordValidator = (value: string) =>{
+  if(!value){
+    return "password is required"
+  }
+  return true
+}
+
+const {
+  value: password,
+  errorMessage: passwordErrorMessage,
+  meta: passwordMeta
+} = useField('password', passwordValidator)
+
+watch(()=>loginPayload.password, (value)=>{
+  password.value = value
+})
+
+const usernameValidator = (value: string) => {
+  if (!value) {
+    return "username is required"
+  }
+  return true
+}
+const {
+  value: username,
+  errorMessage: usernameErrorMessage,
+  meta: usernameMeta
+} = useField('username', usernameValidator)
+
+watch(()=>loginPayload.username, (value)=>{
+  username.value = value
+})
+
+const everyThingOkay = computed(()=> {
+  return(
+    usernameMeta.validated && usernameMeta.valid &&
+    emailMeta.validated && !emailMeta.valid &&
+    passwordMeta.validated && !passwordMeta.valid
+  )
+})
+
+const loginHandler = ()=>{
+  if(everyThingOkay.value){
+    authStore.loginUser(loginPayload)
+      .then(resp =>{
+        if(resp.result == 'success'){
+          router.push({
+            name: 'Home'
+          })
+        }
+        return
+      })
+      .catch((error)=>{
+        notificationStore.addNotification('Incorrect credential, please try again', 'error')
+      })
+  }
+}
+
 </script>
 
 
@@ -55,6 +158,9 @@
                       required
                       type="text"
                     />
+                    <div v-if="usernameMeta.validated && !usernameMeta.valid">
+                      <span class="text-rose-500">{{usernameErrorMessage}}</span>
+                    </div>
                   </div>
                   <div>
                     <label class="label font-semibold text-sm" for="email">Email address </label>
@@ -65,6 +171,9 @@
                       required
                       type="email"
                     />
+                    <div v-if="emailMeta.validated && !emailMeta.valid">
+                      <span class="text-rose-500">{{emailErrorMessage}}</span>
+                    </div>
                   </div>
                   <div>
                     <div class="flex items-center justify-between">
@@ -76,15 +185,18 @@
                     </div>
                     <div>
                       <input
-                        id="email"
+                        id="password"
                         class="input input-primary input-bordered border-1 border-AF-500  w-full text-sm"
                         required
                         type="password"
                       />
+                      <div v-if="passwordMeta.validated && !passwordMeta.valid">
+                        <span class="text-rose-500">{{passwordErrorMessage}}</span>
+                      </div>
                     </div>
                   </div>
                   <div class="w-full">
-                    <button class="btn w-full bg-AF-400 hover:bg-AF-700">
+                    <button class="btn w-full bg-AF-400 hover:bg-AF-700" type="submit" @click="loginHandler">
                       <span class="text-white">Submit</span>
                     </button>
                   </div>
