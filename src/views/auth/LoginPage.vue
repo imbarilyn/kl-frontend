@@ -99,6 +99,15 @@ const loginHandler = ()=>{
       .catch((error)=>{
         notificationStore.addNotification('Incorrect credential, please try again', 'error')
       })
+      .finally(()=>{
+        setTimeout(()=>{
+          isLoading.value = false
+        }, 3000)
+      })
+  }
+  else{
+    console.log('Incorrect details')
+    notificationStore.addNotification('Please key in correcte details', 'warning')
   }
 }
 
