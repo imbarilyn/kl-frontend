@@ -10,6 +10,9 @@ import Swal from 'sweetalert2'
 
 const contractStore = useContractStore()
 const notificationStore = useNotificationsStore()
+const countryPrompt = ref('')
+const companyPrompt = ref('')
+const categoryPrompt = ref('')
 const props = defineProps<{
   id: Number
 }>()
@@ -177,6 +180,7 @@ const addContract = () => {
 
   // All good we can now persist the server
   if(everyThingIsValid()){
+    console.log(contractData)
     formData.append('contract_name', contractData.contractName)
     formData.append('vendor_name', contractData.vendorName)
     formData.append('country', contractData.country)
@@ -186,6 +190,7 @@ const addContract = () => {
     formData.append('end_date', contractData.expiryDate)
     formData.append('file', fileUpload.value[0])
     formData.append('status', 'active')
+    console.log(formData.get('contract_name'))
     contractStore.updateContract(props.id, formData)
       .then((resp)=>{
         if(resp.result === 'success'){
@@ -205,22 +210,26 @@ const addContract = () => {
 }
 
 
-
+const isFetching = ref(true)
 
 onMounted(()=> {
   contractStore.getContract(props.id)
     .then((response) => {
       console.log('Data to be updated ',response.data)
       if (response.result === 'success') {
-        // contractContainer.value = response.data
         contractData.contractName = response.data.contract_name
         contractData.vendorName = response.data.vendor_name
         contractData.country = response.data.country
+        countryPrompt.value = response.data.country
+        companyPrompt.value = response.data.company_name
         contractData.company = response.data.company_name
         contractData.category = response.data.category
+        categoryPrompt.value = response.data.category
         contractData.startDate = response.data.start_date
         contractData.expiryDate = response.data.end_date
         fileUpload.value = response.data.file_upload
+        console.log(countryPrompt.value)
+        console.log(companyPrompt.value)
       } else {
         // notificationStore.addNotification('Error fetching contract', 'error')
         Swal.fire({
@@ -237,6 +246,10 @@ onMounted(()=> {
     .catch((error) => {
       console.log(error)
     })
+    .finally(()=>{
+      isFetching.value = false
+
+    })
 })
 
 
@@ -244,14 +257,14 @@ onMounted(()=> {
 </script>
 
 <template>
-  <div class="h-full w-full ">
+  <div class="h-full w-full" v-if="!isFetching">
     <main class="w-full mx-auto flex items-center justify-center h-full">
       <div
         class="w-full md:w-6/12 lg:w-5/12 xl:w-4/12 px-4 md:px-2 lg:px-0 bg-white border border-gray-200 rounded-xl shadow-sm dark:bg-gray-800 dark:border-gray-700"
       >
         <div class="sm:p-7">
           <div class="text-center">
-            <h1 class="block text-2xl font-bold text-gray-800 dark:text-white">Add Contract</h1>
+            <h1 class="block text-2xl font-bold text-gray-800 dark:text-white">Update Contract</h1>
             <!--            <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">-->
             <!--              Login in here-->
             <!--            </p>-->
@@ -308,20 +321,20 @@ onMounted(()=> {
                     <div class="flex justify-between items-center w-full">
                       <label class="label font-semibold text-sm text-white" for="country">Country</label>
                     </div>
-                    <ListBox :list-props="countries" @list-choice="handleCountry"/>
+                    <ListBox :list-props="countries" @list-choice="handleCountry" :prompt="countryPrompt"/>
                   </div>
                   <div>
                     <div class="flex justify-between items-center w-full">
                       <label class="label font-semibold text-sm text-white" for="country">Company</label>
                     </div>
-                    <ListBox :list-props="companies" @list-choice="handleCompany" />
+                    <ListBox :list-props="companies" @list-choice="handleCompany" :prompt="companyPrompt" />
                   </div>
                 </div>
                 <div>
                   <div class="flex justify-between items-center w-full">
                     <label class="label font-semibold text-sm text-white" for="country">Category</label>
                   </div>
-                  <ComboBox :combo-props="categories"  @combo-choice="handleCategory"/>
+                  <ComboBox :combo-props="categories"  @combo-choice="handleCategory" :prompt="categoryPrompt"/>
                 </div>
 
                 <div class="grid grid-cols-2 gap-2">
