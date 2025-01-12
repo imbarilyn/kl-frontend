@@ -11,6 +11,7 @@ import { useRouter } from 'vue-router'
 import DialogModal from '@/components/DialogModal.vue'
 import Swal from 'sweetalert2'
 import { ref } from 'vue'
+import moment from 'moment/moment'
 
 
 interface ContractData {
@@ -34,8 +35,15 @@ const columns = [
   { data: 'country', title: 'Country' },
   { data: 'vendor_name', title: 'Vendor' },
   { data: 'category', title: 'Category' },
-  { data: 'start_date', title: 'Start Date' },
-  { data: 'end_date', title: 'Expiry Date' },
+  { data: 'start_date', title: 'Start Date',
+    render: function(data: string, type: string, row: ContractData) {
+      return moment(row.start_date, 'yyyy-MM-DD').format('DD MMM YYYY')
+    }
+  },
+  { data: 'end_date', title: 'Expiry Date',
+    render: function(data: string, type: string, row: ContractData) {
+      return moment(row.end_date, 'yyyy-MM-DD').format('DD MMM YYYY')
+    }},
   {
     data: 'status',
     title: 'Status',
@@ -95,9 +103,9 @@ $(document).ready(function() {
       {
         extend: 'csv',
         className: 'bg-transparent',
-        exportOptions: {
-          columns: exceptedColumns
-        }
+        // exportOptions: {
+        //   columns: exceptedColumns
+        // }
       },
       {
         extend: 'print',
