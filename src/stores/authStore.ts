@@ -22,7 +22,7 @@ interface User {
   user_id: number
 }
 
-const BASEURL = import.meta.env.BASE_URL
+const BASEURL = import.meta.env.VITE_BASE_URL
 export  const useAuthStore = defineStore('useAuthStore', () =>{
 
 
@@ -76,6 +76,11 @@ export  const useAuthStore = defineStore('useAuthStore', () =>{
 
 //   login user
   async function loginUser (loginPayload:  LoginPayload){
+    console.log(loginPayload)
+    const formData = new FormData()
+    formData.append('email', loginPayload.email)
+    formData.append('username',  loginPayload.username)
+    formData.append('password', loginPayload.password)
     try {
       const response = await fetch(`${BASEURL}/auth/token`, {
         method: 'POST',
