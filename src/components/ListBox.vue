@@ -16,10 +16,11 @@ interface ListBoxOptions{
 
 interface ListBoxProps{
   listProps: ListBoxOptions[]
+  prompt: string
 }
 
 const props = defineProps<ListBoxProps>();
-const selectedOption = ref(props.listProps[0].name);
+const selectedOption = ref(props.prompt);
 
 const emits =defineEmits<{
   (event: 'listChoice', value: string): void
