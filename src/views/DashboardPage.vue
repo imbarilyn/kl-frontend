@@ -2,12 +2,14 @@
 import { useContractStore, useNotificationsStore } from '@/stores'
 import DialogModal from '@/components/DialogModal.vue'
 import { useField } from 'vee-validate'
-import { computed, ref, watch } from 'vue'
+import { computed, ref, watch, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { showAlert } from '@/alert'
+import { useAuthStore } from '@/stores/authStore'
 
 const contractStore = useContractStore()
 const router = useRouter()
+const authStore = useAuthStore()
 const addContractEmail = () => {
   contractStore.openAddEmailDialog()
 }
@@ -19,11 +21,11 @@ const emailValidator = (value: string) => {
     return 'Email is required'
   }
 console.log()
-  const emailRegex = /^[a-zA-Z0-9._%+-]+@klm\.com$/
-
-  if (!emailRegex.test(value)) {
-    return 'Email must be valid ending with @klm.com'
-  }
+  // const emailRegex = /^[a-zA-Z0-9._%+-]+@klm\.com$/
+  //
+  // if (!emailRegex.test(value)) {
+  //   return 'Email must be valid ending with @klm.com'
+  // }
 
   if (value.length > 50) {
     return 'Email must be less than 50 characters'
@@ -79,7 +81,8 @@ const addContract = () => {
   )
 }
 
-const viewContracts = () => {
+const viewContracts = (tab: string) => {
+  activeTab.value = tab
   router.push(
     {
       name: 'DataTable'
@@ -87,7 +90,8 @@ const viewContracts = () => {
   )
 }
 
-const viewEmailAddress = () => {
+const viewEmailAddress = (tab: string) => {
+  activeTab.value = tab
   router.push(
     {
       name: 'email'
@@ -102,8 +106,40 @@ const collapseSidebar = (value: boolean) => {
 const route = useRoute()
 // allow collapse only on DataTable
 const showArrow = computed(() => {
-  return route.name === 'DataTable'
+  return route.name === 'DataTable'   || route.name === 'expired-contracts'
+})
 
+const handleExpiredContracts = (tab: string)=>{
+  activeTab.value = tab
+  router.push({
+    name: 'expired-contracts'
+  })
+}
+const activeTab = ref('contracts')
+
+const handleLogout = ()=>{
+  authStore.logout()
+  setTimeout(()=>{
+    contractStore.closeLogoutDialog()
+    router.push({
+      name: 'Login'
+    })
+  }, 1000)
+}
+const expiredContracts = ref(0)
+onMounted(()=>{
+  contractStore.getExpiredContracts()
+    .then((resp)=>{
+      if(resp.result === 'success'){
+        console.log('expired contracts', resp.data)
+        console.log('expired contracts', resp.data)
+        expiredContracts.value = resp.data.length
+      }
+      return
+    })
+    .catch((error)=>{
+      return
+    })
 
 })
 </script>
@@ -125,50 +161,58 @@ const showArrow = computed(() => {
           class='fixed px-4 py-4 z-40 w-64 block md-hidden  bg-AF-600 bottom-0 top-0 inset-y-0 h-screen'>
           <!--        klm logo-->
           <div class="flex">
-            <div class="">
-              <p class="text-white">Welcome Linah</p>
+            <div class="flex  items-end gap-1">
+              <span class="material-icons text-white !text-3xl">emoji_emotions</span>
+              <span class="text-white text-xl font-semibold">Welcome {{authStore.getUserInfo()?.username as string}}</span>
             </div>
             <div
               v-if="showArrow"
               @click="collapseSidebar(true)"
-              class="relative btn btn-sm  left-28 bg-AF-700 hover:bg-AF-900 rounded-full w-8 h-8 flex justify-center items-center cursor-pointer">
+              class="relative btn btn-sm  left-12 bg-AF-700 hover:bg-AF-900 rounded-full w-8 h-8 flex justify-center items-center cursor-pointer">
               <span class="material-icons-outlined text-white">arrow_back_ios</span>
             </div>
 
           </div>
 
           <!--        contracts per country  section-->
-          <div class="pt-4 flex flex-col">
-            <div class="pb-4">
-              <p class="text-white font-semibold">Contracts</p>
+          <div class="pt-10 flex flex-col">
+            <div class="pb-4 flex gap-2">
+              <span class="material-icons text-white">grid_view</span>
+              <span class="text-white font-semibold">Dashboard</span>
             </div>
             <div class="overflow-y-auto">
               <div class="pb-4">
-                <button class="btn btn-sm w-full justify-start"
-                        @click="viewContracts"
+                <button class="btn btn-sm w-full justify-start "
+                        :class="[activeTab === 'contracts' ? 'bg-AF-700 text-white border-none hover:bg-AF-700' : '']"
+                        @click="viewContracts('contracts')"
                 >
-                  <span class="material-icons-outlined">summarize</span>
-                  <span>Contracts</span>
+                  <span class="material-icons-outlined ">summarize</span>
+                  <span class="">Contracts</span>
                 </button>
               </div>
             </div>
             <div>
               <!--          Available email address-->
               <div class="pb-4">
-                <button class="btn btn-sm w-full justify-start" @click="viewEmailAddress">
+                <button class="btn btn-sm w-full justify-start"
+                        :class="[activeTab === 'email' ? 'bg-AF-700 text-white border-none hover:bg-AF-700' : '']"
+                        @click="viewEmailAddress('email')">
                   <span class="material-icons-outlined">email</span>
                   <span>Email addresses</span>
                 </button>
               </div>
               <!--          expired contracts-->
               <div class="relative">
-                <button class="btn btn-sm w-full justify-start">
+                <button
+                  @click="handleExpiredContracts('expired-contracts')"
+                  :class="[activeTab === 'expired-contracts' ? 'bg-AF-700 text-white border-none hover:bg-AF-700' : '']"
+                  class="btn btn-sm w-full justify-start">
                   <span class="material-icons-outlined">running_with_errors</span>
                   <span>Expired Contracts</span>
                 </button>
                 <div
                   class="absolute -top-2 -right-2 bg-rose-400 rounded-full flex justify-center items-centers px-2 py-1">
-                  <p class="text-xs text-white">2</p>
+                  <p class="text-xs text-white font-bold">{{expiredContracts}}</p>
                 </div>
               </div>
 
@@ -178,14 +222,6 @@ const showArrow = computed(() => {
 
           <!--        bottom section-->
           <div class="absolute space-y-2 bottom-0 pb-4 flex flex-col w-full">
-
-            <div class="me-8">
-              <button class="btn btn-sm w-full justify-start">
-                <span class="material-icons-outlined">settings</span>
-                <span>Settings</span>
-              </button>
-            </div>
-
             <!--          logout button-->
             <div class="me-8">
               <button class=" btn btn-sm w-full justify-start"
@@ -194,9 +230,20 @@ const showArrow = computed(() => {
                 <span>Log out</span>
               </button>
             </div>
+            <div class="flex  gap-3 text-white me-8 bg-AF-800 rounded py-3 px-3 mt-4">
+              <div>
+                <span class="material-icons !text-4xl text-white">account_circle</span>
+              </div>
+              <div>
+                <p>Logged in as:</p>
+                <span>{{authStore.getUserInfo()?.username}}</span>
+              </div>
 
+
+            </div>
           </div>
         </div>
+
       </div>
     </Transition>
     <!--    right side-->
@@ -307,8 +354,8 @@ const showArrow = computed(() => {
       </template>
       <template #footer>
         <div class="flex justify-center w-full flex-row">
-          <button class="btn bg-sky-200 me-5">Sign Out</button>
-          <button class="btn bg-main-color " @click="contractStore.closeLogoutDialog()">
+          <button @click="handleLogout" class="btn bg-AF-800 text-white me-5 hover:bg-AF-100 hover:text-AF-800">Sign Out</button>
+          <button class="btn bg-slate-300" @click="contractStore.closeLogoutDialog()">
             Cancel
           </button>
         </div>
