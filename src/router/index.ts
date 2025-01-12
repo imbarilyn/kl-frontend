@@ -11,7 +11,7 @@ const routes =  [
   },
   {
     name: 'User',
-    path: '/auth/',
+    path: '/auth',
     component: ()=>import ('@/views/auth/UserPage.vue'),
     children: [
       {
@@ -52,7 +52,7 @@ const routes =  [
         component: ()=>import('@/components/EditContract.vue'),
         meta: {
           requiresAuth: true,
-          title: 'Contract Section'
+          title: 'Update Contract Section'
         },
         props: (route: any)=>{
           return{
@@ -67,6 +67,15 @@ const routes =  [
         meta: {
           requiresAuth: true,
           title: 'Create Contract Section'
+        }
+      },
+      {
+        name: 'expired-contracts',
+        path: 'expired-contracts',
+        component: ()=> import ('@/components/ExpiredContracts.vue'),
+        meta: {
+          requiresAuth: true,
+          title: 'Expired Contracts Section'
         }
       },
       {
