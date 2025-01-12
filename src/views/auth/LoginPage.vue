@@ -142,7 +142,7 @@ const loginHandler = ()=>{
       >
         <div class="md:mt-5">
           <!-- Form -->
-          <form class="md:my-4">
+          <form class="md:my-4" @submit.prevent="loginHandler">
             <div class="grid md:gap-y-4">
               <div class="flex flex-col md:space-y-1">
                 <div class="flex flex-col space-y-5">
