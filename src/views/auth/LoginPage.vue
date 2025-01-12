@@ -163,6 +163,7 @@ const loginHandler = ()=>{
                   <div>
                     <label class="label font-semibold text-sm" for="email">Username </label>
                     <input
+                      v-model="loginPayload.username"
                       id="username"
                       class="input input-primary input-bordered  border-1 border-AF-500 w-full text-sm"
                       placeholder="John Doe"
@@ -170,12 +171,13 @@ const loginHandler = ()=>{
                       type="text"
                     />
                     <div v-if="usernameMeta.validated && !usernameMeta.valid">
-                      <span class="text-rose-500">{{usernameErrorMessage}}</span>
+                      <span class="text-rose-500 text-sm">{{usernameErrorMessage}}</span>
                     </div>
                   </div>
                   <div>
                     <label class="label font-semibold text-sm" for="email">Email address </label>
                     <input
+                      v-model="loginPayload.email"
                       id="email"
                       class="input input-primary input-bordered  border-1 border-AF-500 w-full text-sm"
                       placeholder="Johndoe@klm.com"
