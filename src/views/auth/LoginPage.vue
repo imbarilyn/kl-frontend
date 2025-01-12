@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useField } from 'vee-validate'
-import { computed, reactive, watch } from 'vue'
+import { computed, reactive, ref, watch } from 'vue'
 import { useAuthStore } from '@/stores/authStore'
 import { useRouter} from 'vue-router'
 import { useNotificationsStore } from '@/stores'
@@ -80,13 +80,15 @@ watch(()=>loginPayload.username, (value)=>{
 const everyThingOkay = computed(()=> {
   return(
     usernameMeta.validated && usernameMeta.valid &&
-    emailMeta.validated && !emailMeta.valid &&
-    passwordMeta.validated && !passwordMeta.valid
+    emailMeta.validated && emailMeta.valid &&
+    passwordMeta.validated && passwordMeta.valid
   )
 })
 
+const isLoading = ref(false)
 const loginHandler = ()=>{
   if(everyThingOkay.value){
+    isLoading.value = true
     authStore.loginUser(loginPayload)
       .then(resp =>{
         if(resp.result == 'success'){
@@ -205,8 +207,9 @@ const loginHandler = ()=>{
                     </div>
                   </div>
                   <div class="w-full">
-                    <button class="btn w-full bg-AF-400 hover:bg-AF-700" type="submit" @click="loginHandler">
-                      <span class="text-white">Submit</span>
+                    <button class="btn w-full bg-AF-400 hover:bg-AF-700" type="submit">
+                      <span class="text-white" v-if="!isLoading">Submit</span>
+                      <span class="loading loading-spinner loading-md text-white" v-else></span>
                     </button>
                   </div>
                 </div>
