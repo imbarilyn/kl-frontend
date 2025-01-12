@@ -11,6 +11,8 @@ import { showAlert } from '@/alert'
 
 
 const notificationStore = useNotificationsStore()
+const countryPrompt = ref('Select Country')
+const companyPrompt = ref('Select Company')
 
 const countries = [
   { name: 'Kenya' },
@@ -188,7 +190,6 @@ const addContract = () => {
     formData.append('start_date', contractData.startDate)
     formData.append('end_date', contractData.expiryDate)
     formData.append('file', fileUpload.value[0])
-    // formData.append('status', 'active')
     
     contractStore.addContract(formData)
       .then((resp)=>{
@@ -279,13 +280,13 @@ const addContract = () => {
                     <div class="flex justify-between items-center w-full">
                       <label class="label font-semibold text-sm text-white" for="country">Country</label>
                     </div>
-                    <ListBox :list-props="countries" @list-choice="handleCountry"/>
+                    <ListBox :list-props="countries" @list-choice="handleCountry" :prompt="countryPrompt"/>
                   </div>
                   <div>
                     <div class="flex justify-between items-center w-full">
                       <label class="label font-semibold text-sm text-white" for="country">Company</label>
                     </div>
-                    <ListBox :list-props="companies" @list-choice="handleCompany" />
+                    <ListBox :list-props="companies" @list-choice="handleCompany" :prompt="companyPrompt" />
                   </div>
                 </div>
                 <div>
