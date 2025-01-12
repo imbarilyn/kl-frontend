@@ -84,14 +84,8 @@ export  const useAuthStore = defineStore('useAuthStore', () =>{
     try {
       const response = await fetch(`${BASEURL}/auth/token`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          email: loginPayload.email,
-          username: loginPayload.username,
-          password: loginPayload.password
-        })
+        body: formData,
+        mode: 'cors'
       }
       )
      const resp = await response.json()
