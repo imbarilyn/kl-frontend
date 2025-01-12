@@ -185,7 +185,7 @@ const loginHandler = ()=>{
                       type="email"
                     />
                     <div v-if="emailMeta.validated && !emailMeta.valid">
-                      <span class="text-rose-500">{{emailErrorMessage}}</span>
+                      <span class="text-rose-500 text-sm">{{emailErrorMessage}}</span>
                     </div>
                   </div>
                   <div>
@@ -198,13 +198,15 @@ const loginHandler = ()=>{
                     </div>
                     <div>
                       <input
+                        :class="[passwordMeta.validated && !passwordMeta.valid? 'input input-error input-bordered border-1 border-rose-400': '']"
+                        v-model="loginPayload.password"
                         id="password"
-                        class="input input-primary input-bordered border-1 border-AF-500  w-full text-sm"
+                        class="input input-primary input-bordered border-1 border-AF-500 w-full text-sm"
                         required
                         type="password"
                       />
                       <div v-if="passwordMeta.validated && !passwordMeta.valid">
-                        <span class="text-rose-500">{{passwordErrorMessage}}</span>
+                        <span class="text-rose-500 text-sm">{{passwordErrorMessage}}</span>
                       </div>
                     </div>
                   </div>
