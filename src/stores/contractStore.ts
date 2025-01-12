@@ -8,14 +8,14 @@ export interface EmailAddressPayload {
   id: number
   email: string
 }
-export const  useContractStore  = defineStore('contractStore', ()=>{
+export const useContractStore = defineStore('contractStore', () => {
   const appIsFetching = ref<boolean>(false)
-  const  isEmailDialogOpen = ref({
-    isOpen:false
+  const isEmailDialogOpen = ref({
+    isOpen: false
   })
 
   const isLogoutDialogOpen = ref({
-    isOpen:false
+    isOpen: false
   })
 
   const isDeleteDialogOpen = ref({
@@ -24,66 +24,64 @@ export const  useContractStore  = defineStore('contractStore', ()=>{
 
 
   const openAddEmailDialog
-    = ()=>{
+    = () => {
     isEmailDialogOpen.value.isOpen = true
   }
 
-  const closeEmailDialog =()=>{
+  const closeEmailDialog = () => {
     isEmailDialogOpen.value.isOpen = false
   }
 
-  const openLogoutDialog = ()=>{
+  const openLogoutDialog = () => {
     isLogoutDialogOpen.value.isOpen = true
   }
 
-  const closeLogoutDialog = ()=>{
+  const closeLogoutDialog = () => {
     isLogoutDialogOpen.value.isOpen = false
   }
 
-  const openDeleteDialog = ()=>{
+  const openDeleteDialog = () => {
     isDeleteDialogOpen.value.isOpen = true
   }
-  const closeDeleteDialog = ()=>{
+  const closeDeleteDialog = () => {
     isDeleteDialogOpen.value.isOpen = false
   }
 
- async function getContracts (){
-    try{
+  async function getContracts() {
+    try {
       const res = await fetch(`${BASE_URL}/contracts/`, {
         method: 'GET',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json'
         },
-        mode: 'cors',
+        mode: 'cors'
       })
       const response = await res.json()
       console.log(response)
       return response
-    }
-    catch (error){
+    } catch (error) {
       console.log(error)
     }
- }
+  }
 
- async function addContract(contract: any){
+  async function addContract(contract: any) {
     console.log(contract)
     try {
       const res = await fetch(`${BASE_URL}/add-contracts/`, {
         method: 'POST',
         body: contract,
-        mode: 'cors',
+        mode: 'cors'
       })
       const response = await res.json()
       console.log(response)
       return response
-    }
-    catch (error){
+    } catch (error) {
       console.log(error)
     }
- }
+  }
 
- async function getContract(contractId: Number ){
-    try{
+  async function getContract(contractId: Number) {
+    try {
       const res = await fetch(`${BASE_URL}/contract/${contractId}`, {
         method: 'GET',
         mode: 'cors'
@@ -91,84 +89,79 @@ export const  useContractStore  = defineStore('contractStore', ()=>{
       const response = await res.json()
       console.log(response)
       return response
-    }
-    catch(error){
+    } catch (error) {
       console.log('here at get contract', error)
     }
 
   }
 
- async function updateContract(contractId: Number, contract: any){
-    try{
+  async function updateContract(contractId: Number, contract: any) {
+    const notificationStore = useNotificationsStore()
+    console.log(contractId)
+    try {
       const response = await fetch(`${BASE_URL}/update-contract/${contractId}`, {
         method: 'PUT',
-        mode: 'cors',
+        mode: 'no-cors',
         body: contract,
-        headers: {
-          'Content-Type': 'application/json',
-        }
       })
       const res = await response.json()
       console.log(res)
       return res
+    } catch (error) {
+      notificationStore.addNotification('Unable to update contract please try again', 'error')
     }
-    catch(error){
-      console.log('here at update', error)
-    }
- }
+  }
 
- async function deleteContract(contractId: Number) {
+  async function deleteContract(contractId: Number) {
     const notificationStore = useNotificationsStore()
-   try {
-     const response = await fetch(`${BASE_URL}/delete-contract/${contractId}`, {
-       method: 'DELETE',
-       mode: 'cors'
-     })
-     const res = await response.json()
-     console.log(res)
-     return res
-   } catch (error) {
-     notificationStore.addNotification('Unable to delete contract', 'error')
-     console.log('here at delete', error)
-   }
- }
+    try {
+      const response = await fetch(`${BASE_URL}/delete-contract/${contractId}`, {
+        method: 'DELETE',
+        mode: 'cors'
+      })
+      const res = await response.json()
+      console.log(res)
+      return res
+    } catch (error) {
+      notificationStore.addNotification('Unable to delete contract', 'error')
+      console.log('here at delete', error)
+    }
+  }
 
- async function addEmail(email: string){
+  async function addEmail(email: string) {
     console.log(email)
-    try{
-      const response = await fetch(`${BASE_URL}/add-emails`,{
+    try {
+      const response = await fetch(`${BASE_URL}/add-emails`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
         mode: 'cors',
-        body: JSON.stringify({email})
+        body: JSON.stringify({ email })
       })
       const resp = await response.json()
       console.log(resp)
       return resp
-    }
-    catch(error){
+    } catch (error) {
       console.log(error)
     }
- }
+  }
 
- async function getEmailAddresses (){
-    try{
-      const response  = await fetch(`${BASE_URL}/emails`)
-      const resp =  await response.json()
+  async function getEmailAddresses() {
+    try {
+      const response = await fetch(`${BASE_URL}/emails`)
+      const resp = await response.json()
       return {
         result: resp.result,
         data: resp.emails
       }
 
-    }
-    catch(error) {
+    } catch (error) {
       console.log(error)
     }
- }
+  }
 
-async function editEmail(emailPayload: EmailAddressPayload){
+  async function editEmail(emailPayload: EmailAddressPayload) {
     console.log('Email address to be edited', emailPayload)
     try {
       const response = await fetch(`http://localhost:8000/update-email/${emailPayload.id}`, {
@@ -189,60 +182,89 @@ async function editEmail(emailPayload: EmailAddressPayload){
         result: resp.result,
         message: resp.message
       }
-    }
-    catch (e) {
+    } catch (e) {
       return {
         result: 'fail',
         message: 'An error occurred while trying to edit email'
       }
     }
-}
+  }
 
 
-async function deleteEmail(emailPayload: EmailAddressPayload){
-  console.log('Email address to be deleted', emailPayload)
-  const notification = useNotificationsStore()
-  try {
-    const response = await fetch(`${BASE_URL}/delete-email/${emailPayload.id}`, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      mode: 'cors',
-    })
-    const resp = await response.json()
-    return {
-      result: resp.result,
-      message: resp.message
+  async function deleteEmail(emailPayload: EmailAddressPayload) {
+    console.log('Email address to be deleted', emailPayload)
+    const notification = useNotificationsStore()
+    try {
+      const response = await fetch(`${BASE_URL}/delete-email/${emailPayload.id}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        mode: 'cors'
+      })
+      const resp = await response.json()
+      return {
+        result: resp.result,
+        message: resp.message
+      }
+    } catch (e) {
+      notification.addNotification('Unable to delete email', 'error')
+      return {
+        result: 'fail',
+        message: 'An error occurred while trying to delete email'
+      }
     }
-  } catch (e) {
-    notification.addNotification('Unable to delete email', 'error')
-    return {
-      result: 'fail',
-      message: 'An error occurred while trying to delete email'
-    }
+  }
+
+  async function getExpiredContracts() {
+    try {
+      const response = await fetch(`${BASE_URL}/expired-contracts`, {
+        method: 'GET',
+        mode: 'cors',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      if (!response.ok) {
+        return {
+          result: 'fail',
+          data: []
+        }
+      } else {
+        const resp = await response.json()
+        return {
+          result: 'success',
+          data: resp.contracts
+        }
+      }
+    } catch(e){
+      return {
+        result: 'fail',
+        data: []
+      }
   }
 }
 
-  return{
-    isEmailDialogOpen,
-    openAddEmailDialog,
-    closeEmailDialog,
-    isLogoutDialogOpen,
-    openLogoutDialog,
-    closeLogoutDialog,
-    getContracts,
-    addContract,
-    updateContract,
-    getContract,
-    deleteContract,
-    isDeleteDialogOpen,
-    closeDeleteDialog,
-    openDeleteDialog,
-    addEmail,
-    getEmailAddresses,
-    editEmail,
-    appIsFetching,
-    deleteEmail
-  }
+return {
+  isEmailDialogOpen,
+  openAddEmailDialog,
+  closeEmailDialog,
+  isLogoutDialogOpen,
+  openLogoutDialog,
+  closeLogoutDialog,
+  getContracts,
+  addContract,
+  updateContract,
+  getContract,
+  deleteContract,
+  isDeleteDialogOpen,
+  closeDeleteDialog,
+  openDeleteDialog,
+  addEmail,
+  getEmailAddresses,
+  editEmail,
+  appIsFetching,
+  deleteEmail,
+  getExpiredContracts
+}
 })
