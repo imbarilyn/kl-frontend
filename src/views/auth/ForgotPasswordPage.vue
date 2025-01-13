@@ -9,8 +9,8 @@
       class="bg-AF-500  md:rounded-tr-2xl md:rounded-br-2xl  md:h-screen flex  items-center md:justify-center md:col-span-6 col-span-12">
       <div class="md:block hidden">
         <div class="text-white">
-          <p class="!text-5xl font-semibold">Welcome Back</p>
-          <span class="text-lg">Hello there, login to continue</span>
+          <p class="!text-2xl font-semibold ">Forgot password?</p>
+          <span class="text-sm">Hello there, please add your email address</span>
         </div>
         <div class="lg:w-80 w-72">
           <img src="/images/contract.png" alt="contract-image">

@@ -128,7 +128,7 @@ export  const useAuthStore = defineStore('useAuthStore', () =>{
         }
       } else {
         const res = await response.json()
-        console.log(resp)
+        console.log(res)
         return {
           result: res.result,
           message: res.message
