@@ -153,6 +153,7 @@ return{
   isUserLoggedIn,
   loginUser,
   getUserInfo,
-  logout
+  logout,
+  resetPassword
   }
 })
