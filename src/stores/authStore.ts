@@ -22,6 +22,12 @@ interface User {
   user_id: number
 }
 
+interface ResetPasswordPayload {
+  token: string
+  password: string
+  confirmPassword: string
+}
+
 const BASEURL = import.meta.env.VITE_BASE_URL
 export  const useAuthStore = defineStore('useAuthStore', () =>{
 
