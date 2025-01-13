@@ -109,6 +109,39 @@ export  const useAuthStore = defineStore('useAuthStore', () =>{
     }
   }
 
+  async  function resetPassword(resetPasswordPayload: ResetPasswordPayload) {
+    console.log(resetPasswordPayload)
+    const formData = new FormData()
+    formData.append('token', resetPasswordPayload.token)
+    formData.append('password', resetPasswordPayload.password)
+    formData.append('confirm_password', resetPasswordPayload.confirmPassword)
+    try {
+      const response = await fetch(`${BASEURL}/auth/reset-password`, {
+        method: 'PUT',
+        mode: 'cors',
+        body: formData
+      })
+      if (!response.ok) {
+        return {
+          result: 'fail',
+          message: 'Something went wrong try again'
+        }
+      } else {
+        const res = await response.json()
+        console.log(resp)
+        return {
+          result: res.result,
+          message: res.message
+        }
+      }
+    } catch (e) {
+      return {
+        result: 'fail',
+        message: 'Password reset failed'
+      }
+    }
+  }
+
   const logout = () =>{
     token.value = null
     userInfo.value = null
