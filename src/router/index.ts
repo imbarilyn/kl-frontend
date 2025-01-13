@@ -29,6 +29,21 @@ const routes =  [
         meta: {
           requiresAuth: false,
         }
+      },
+      {
+        name: 'Reset-Password',
+        path: 'reset-password',
+        component: () => import('@/views/auth/ResetPassword.vue'),
+        props: (route: any)=>{
+          const { query } = route
+          return {
+            token: query.token
+
+          }
+        },
+        meta: {
+          requiresAuth: false,
+        }
       }
     ]
   },
