@@ -121,7 +121,7 @@ const loginHandler = ()=>{
       class="bg-AF-500  md:rounded-tr-2xl md:rounded-br-2xl  md:h-screen flex  items-center md:justify-center md:col-span-6 col-span-12">
       <div class="md:block hidden">
         <div class="text-white">
-          <p class="!text-5xl font-semibold">Set Password</p>
+          <p class="!text-5xl font-semibold">Reset Password</p>
           <span class="text-lg">Hello there, set your new password</span>
         </div>
         <div class="lg:w-80 w-72">
@@ -196,8 +196,8 @@ const loginHandler = ()=>{
 
                   </div>
                   <div class="w-full">
-                    <button class="btn w-full bg-AF-400 hover:bg-AF-700" type="submit">
-                      <span class="text-white" v-if="!isLoading">Submit</span>
+                    <button class="btn w-full bg-AF-400 hover:bg-AF-300" type="submit">
+                      <span class="text-white" v-if="!isLoading">Reset password</span>
                       <span class="loading loading-spinner loading-md text-white" v-else></span>
                     </button>
                   </div>
