@@ -103,8 +103,7 @@ const startDateValidator = (value: string) => {
     return 'Start date is required'
   }
   if(moment(value).isAfter(now)){
-    console.log('start date is before today')
-    return 'Start date should not be before today'
+    return 'Start date should not be in the future'
   }
   return true
 }
@@ -119,11 +118,17 @@ watch(()=>contractData.startDate, (value)=>{
 })
 
 const expiryDateValidator = (value: string) => {
+  let isExpired = moment(contractData.expiryDate).isBefore(now)
+  let isEmailSent = contractData.email_sent === 1
+ let  timeThreshold = moment().add(32, 'days')
   if (!value) {
     return 'Expiry date is required'
   }
-  if(moment(value).isBefore(now)){
-    return 'Expiry date should not be before today'
+  if(isExpired && moment(value).isBefore(timeThreshold)){
+    return 'Expiry date should be more than one month from today'
+  }
+  if(!isExpired && !isEmailSent && moment(value).isBefore(timeThreshold)){
+    return 'Expiry date should be more than one month from today'
   }
   return true
 }
