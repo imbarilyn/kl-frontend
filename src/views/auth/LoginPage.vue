@@ -20,12 +20,12 @@ const emailValidator = (value: string) => {
     return 'Email is required'
   }
 
-  const emailRegex = /^[a-zA-Z0-9._%+-]+@klm\.com$/
+  // const emailRegex = /^[a-zA-Z0-9._%+-]+@klm\.com$/
   // const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
-  if (!emailRegex.test(value)) {
-    return 'Email must be valid ending with @klm.com'
-  }
+  // if (!emailRegex.test(value)) {
+  //   return 'Email must be valid ending with @klm.com'
+  // }
 
   if (value.length > 50) {
     return 'Email must be less than 30 characters'
@@ -151,9 +151,13 @@ onBeforeUnmount(()=>{
           <img src="/images/contract.png" alt="contract-image">
         </div>
       </div>
-      <div class="md:hidden flex py-6 justify-start text-white ps-4">
-        <router-link to="/auth/forgot-password" class="material-icons-outlined cursor-pointer btn btn-sm btn-ghost btn-circle">chevron_left</router-link>
-        <span class="text-sm ps-4">Login</span>
+      <div class="md:hidden flex items-center py-6 justify-start text-white ps-4">
+        <div class="flex items-center justify-center btn btn-sm btn-ghost btn-circle" @click="goForgotPassword">
+          <span class="material-icons-outlined cursor-pointer">chevron_left</span>
+        </div>
+        <div>
+          <span class="text-sm ps-4">Forgot password</span>
+        </div>
       </div>
     </div>
     <div
@@ -214,7 +218,7 @@ onBeforeUnmount(()=>{
                       <label class="label font-semibold text-sm" for="email">Password</label>
                       <router-link
                         class="text-sm text-AF-400 decoration-2 hover:underline font-medium dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
-                        to="forgot-password">Forgot password?
+                        to="/auth/forgot-password">Forgot password?
                       </router-link>
                     </div>
                     <div>
@@ -232,7 +236,7 @@ onBeforeUnmount(()=>{
                     </div>
                   </div>
                   <div class="w-full">
-                    <button class="btn w-full bg-AF-400 hover:bg-AF-700" type="submit">
+                    <button class="btn w-full bg-AF-400 hover:bg-AF-300" type="submit">
                       <span class="text-white" v-if="!isLoading">Submit</span>
                       <span class="loading loading-spinner loading-md text-white" v-else></span>
                     </button>

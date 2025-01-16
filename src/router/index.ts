@@ -85,7 +85,7 @@ const routes =  [
         }
       },
       {
-        name: 'expired-contracts',
+        name: 'expiredContracts',
         path: 'expired-contracts',
         component: ()=> import ('@/components/ExpiredContracts.vue'),
         meta: {
