@@ -6,6 +6,7 @@ import DialogModal from '@/components/DialogModal.vue'
 import { useField } from 'vee-validate'
 import { type EmailAddressPayload } from '@/stores'
 import LoadingSpinner from '@/components/LoadingSpinner.vue'
+import StaticToast from '@/components/toasts/StaticToast.vue'
 
 const contractStore = useContractStore()
 
@@ -66,6 +67,11 @@ const loadEmails = () => {
       setTimeout(() => {
         appIsLoading.value = false
       }, 2000)
+      if(emailAddressesArray.value.length >= 3) {
+        contractStore.isEmailMax = true
+        console.log('Number of emails reached maximum')
+        contractStore.setEmailMoreThanTwo('Number of emails reached maximum', true)
+      }
     })
 }
 onMounted(() => {

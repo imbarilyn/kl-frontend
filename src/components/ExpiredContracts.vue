@@ -49,7 +49,7 @@ const columns = [
     data: 'status',
     title: 'Status',
     render: function(data: string, type: string, row: ContractData) {
-      console.log('Status---', row.status, typeof (row.status))
+      // console.log('Status---', row.status, typeof (row.status))
       // if (row.status === 1) {
       //   return `<span class="bg-green-500 text-white rounded-lg px-2 py-1">active</span>`
       // } else {
@@ -64,7 +64,7 @@ const columns = [
     orderable: false,
     searchable: false,
     render: function(data: Partial<ContractData>, row: ContractData, type: string) {
-      console.log(row.id)
+      // console.log(row.id)
       return `
 <div class="flex gap-3 justify-center items-start">
       <button class="edit-btn" data-id="${data.id}"><span class="material-icons-outlined text-AF-500">edit</span></button>
