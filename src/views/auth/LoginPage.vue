@@ -124,6 +124,16 @@ const loginHandler = ()=>{
   }
 }
 
+const goForgotPassword = ()=>{
+  router.push({
+    name: 'Forgot-Password'
+  })
+}
+
+onBeforeUnmount(()=>{
+  authStore.closeBanner()
+})
+
 </script>
 
 
