@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useField } from 'vee-validate'
-import { computed, reactive, ref, watch } from 'vue'
+import { computed, onBeforeUnmount, reactive, ref, watch } from 'vue'
 import { useAuthStore } from '@/stores/authStore'
 import { useRouter} from 'vue-router'
 import { useNotificationsStore } from '@/stores'
@@ -93,23 +93,34 @@ const loginHandler = ()=>{
       .then(resp =>{
         if(resp.result == 'success'){
           router.push({
-            name: 'Home'
+            name: 'DataTable'
           })
         }
-        return
+        else {
+          setTimeout(()=>{
+            isLoading.value = false
+            authStore.isAuthenticationError = {
+              isError: true,
+              message: 'Invalid credentials',
+              type: 'error'
+            }
+          }, 1000)
+        }
       })
       .catch((error)=>{
-        notificationStore.addNotification('Incorrect credential, please try again', 'error')
-      })
-      .finally(()=>{
         setTimeout(()=>{
           isLoading.value = false
-        }, 3000)
+          authStore.isAuthenticationError = {
+            isError: true,
+            message: 'Something went wrong, please try again',
+            type: 'error'
+          }
+        }, 1000)
       })
   }
   else{
     console.log('Incorrect details')
-    notificationStore.addNotification('Please key in correcte details', 'warning')
+    notificationStore.addNotification('Please key in correct details', 'warning')
   }
 }
 
