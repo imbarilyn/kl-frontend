@@ -1,16 +1,30 @@
 <script setup lang="ts">
 
+import NotificationBanner from '@/components/toasts/NotificationBanner.vue'
+import { useAuthStore } from '@/stores/authStore'
+import { onBeforeUnmount } from 'vue'
+
+
+const authStore = useAuthStore()
+
+
 </script>
 
 <template>
-  <RouterView #default="{Component, route}">
-    <Transition mode="out-in" appear name="page">
-      <template v-if="Component">
-        <component  :is="Component" :key="route.fullPath"/>
-      </template>
+  <div class="relative">
 
-    </Transition>
-  </RouterView>
+      <NotificationBanner :message="authStore.isAuthenticationError.message"
+                          :is-open=authStore.isAuthenticationError.isError
+                          :type="authStore.isAuthenticationError.type" />
+
+    <RouterView #default="{Component, route}">
+      <Transition mode="out-in" appear name="page">
+        <template v-if="Component">
+          <component :is="Component" :key="route.fullPath" />
+        </template>
+      </Transition>
+    </RouterView>
+  </div>
 
 </template>
 
