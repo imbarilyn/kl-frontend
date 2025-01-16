@@ -78,6 +78,10 @@ onMounted(() => {
   loadEmails()
 
 })
+
+const closeStaticModal = () => {
+  contractStore.setEmailMoreThanTwo('', false)
+}
 const selectedEmail = ref<EmailAddressPayload | null>(null)
 const editEmail = (emailId: Number) => {
   selectedEmail.value = emailAddressesArray.value.find(email => email.id === emailId) as EmailAddressPayload
