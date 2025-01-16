@@ -76,7 +76,6 @@ const loadEmails = () => {
 }
 onMounted(() => {
   loadEmails()
-
 })
 
 const closeStaticModal = () => {
@@ -205,8 +204,9 @@ const reLoadEmails = () => {
 
 <template>
   <div class="w-full flex h-full">
+    <StaticToast :show="contractStore.getEmailMoreThanTwo.show" :message="contractStore.getEmailMoreThanTwo.message" @close-static-toast="closeStaticModal"/>
     <div v-if="!appIsLoading" class="flex">
-      <div v-if="!noData">
+      <div v-if="!noData" class="flex">
         <div v-for="email in emailAddressesArray" :key="email.id">
           <div class="card bg-blue-00 w-72 max-w-80 ms-28 shadow-xl">
             <figure>
