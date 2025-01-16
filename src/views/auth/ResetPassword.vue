@@ -71,25 +71,38 @@ const loginHandler = ()=>{
       .then(resp =>{
         console.log(resp)
         if(resp.result == 'success'){
+          isLoading.value = false
           showAlert({
-            message: 'Password reset successful',
+            message: 'Password reset successful, please login',
             type: 'success'
           })
           setTimeout(()=>{
             router.push({
-              name: '/auth'
+              name: 'Login'
             })
           }, 2000)
-        }
+        } else{
 
+          setTimeout(()=>{
+            isLoading.value = false
+            showAlert({
+              type: 'error',
+              message: resp.message
+            })
+
+          }, 1000)
+        }
       })
       .catch((error)=>{
-        notificationStore.addNotification('Incorrect credential, please try again', 'error')
-      })
-      .finally(()=>{
+
         setTimeout(()=>{
           isLoading.value = false
-        }, 3000)
+          showAlert({
+            type: 'error',
+            message: 'An error occurred while trying to reset password, please try again'
+          })
+        }, 1000)
+        // notificationStore.addNotification('Incorrect credential, please try again', 'error')
       })
   }
   else{
