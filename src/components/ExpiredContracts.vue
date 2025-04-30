@@ -24,9 +24,34 @@ interface ContractData {
   end_date: string;
   status: number;
   id: number
+  status: string;
+  id: string
   file_upload: string
 }
 
+export interface DataTableAjaxData {
+  draw: number
+  start: number
+  length: number
+  search: {
+    value: string
+    regex: boolean
+  }
+  order:  Array<{
+    column: number
+    dir: string
+  }>
+  columns: Array<{
+    data: string,
+    name: string
+    searchable: boolean
+    orderable: boolean
+    search: {
+      value: string
+      regex: boolean
+    }
+  }>
+}
 const BASE_URL = import.meta.env.VITE_BASE_URL
 const contractData = ref<ContractData | null>(null)
 const columns = [
