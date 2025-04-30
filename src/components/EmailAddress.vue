@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref, watch } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { useContractStore } from '@/stores'
 import { showAlert } from '@/alert'
 import DialogModal from '@/components/DialogModal.vue'
@@ -42,20 +42,20 @@ const {
 watch(() => contractEmail.value, (value) => {
   email.value = value
 })
-const noData = ref<boolean>(false)
+// const noData = ref<boolean>(false)
 const isError = ref<boolean>(false)
 const appIsLoading = ref<boolean>(false)
 const loadEmails = () => {
+  emailAddressesArray.value = []
   appIsLoading.value = true
   contractStore.getEmailAddresses()
     .then(response => {
       // console.log(response)
-      if (response?.data) {
+      if (response?.result === 'success') {
         emailAddressesArray.value = response.data
         console.log(emailAddressesArray.value)
       } else {
-        console.log('No email just yet')
-        noData.value = true
+        isError.value = true
       }
     })
     .catch(error => {
@@ -66,11 +66,16 @@ const loadEmails = () => {
     .finally(() => {
       setTimeout(() => {
         appIsLoading.value = false
+        // emailAddressesArray.value = []
       }, 2000)
       if(emailAddressesArray.value.length >= 3) {
         contractStore.isEmailMax = true
         console.log('Number of emails reached maximum')
         contractStore.setEmailMoreThanTwo('Number of emails reached maximum', true)
+      }
+      else{
+        contractStore.isEmailMax = false
+        contractStore.setEmailMoreThanTwo('', false)
       }
     })
 }
