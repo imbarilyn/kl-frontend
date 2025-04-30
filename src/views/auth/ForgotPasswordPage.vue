@@ -34,7 +34,7 @@ const isLoading = ref(false)
 const openModal = ref(false)
 const isEverythingOkay = computed(() => emailMeta.validated && emailMeta.valid)
 const handleForgotPassword = () => {
-  closeModal()
+  // closeModal()
     isLoading.value = true
     authStore.forgotPassword(emailAddress.value)
       .then((response)=>{
@@ -65,11 +65,12 @@ const handleForgotPassword = () => {
           })
         }, 1000)
       })
-      // .finally(()=>{
-      //   setTimeout(()=>{
-      //     isLoading.value = false
-      //   }, 1000)
-      // })
+      .finally(()=>{
+        setTimeout(()=>{
+          isLoading.value = false
+          closeModal()
+        }, 1000)
+      })
 
 }
  const confirmForgotPassword = ()=>{
