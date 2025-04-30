@@ -87,7 +87,7 @@ const closeStaticModal = () => {
   contractStore.setEmailMoreThanTwo('', false)
 }
 const selectedEmail = ref<EmailAddressPayload | null>(null)
-const editEmail = (emailId: Number) => {
+const editEmail = (emailId: string) => {
   selectedEmail.value = emailAddressesArray.value.find(email => email.id === emailId) as EmailAddressPayload
   contractEmail.value = selectedEmail.value.email
   openEditEmailDialog.value = true
@@ -95,7 +95,7 @@ const editEmail = (emailId: Number) => {
 
 const emailPayLoad = ref<EmailAddressPayload>({
   email: '',
-  id: 0
+  id: ''
 
 })
 
