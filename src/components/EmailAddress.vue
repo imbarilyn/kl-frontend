@@ -103,7 +103,7 @@ const isEmailChange = computed(()=>selectedEmail.value?.email === contractEmail.
 const emailUpdateLoading = ref<boolean>(false)
 const updateEmail = () => {
   // console.log('We are editing the emails')
-  if (selectedEmail.value?.email === contractEmail.value) {
+  if (isEmailChange.value) {
     showAlert({
       message: 'Email address is the same, no changes made',
       type: 'info'
