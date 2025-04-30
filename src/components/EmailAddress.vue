@@ -156,7 +156,7 @@ const updateEmail = () => {
 
 const isDeleteLoading = ref<boolean>(false)
 const openDeleteEmailDialog = ref<boolean>(false)
-const deleteEmail = (emailId: Number) => {
+const deleteEmail = (emailId: string) => {
   selectedEmail.value = emailAddressesArray.value.find(email => email.id === emailId) as EmailAddressPayload
   openDeleteEmailDialog.value = true
 }
