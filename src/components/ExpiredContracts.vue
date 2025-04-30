@@ -22,8 +22,6 @@ interface ContractData {
   category: string;
   start_date: string;
   end_date: string;
-  status: number;
-  id: number
   status: string;
   id: string
   file_upload: string
@@ -75,12 +73,11 @@ const columns = [
     title: 'Status',
     render: function(data: string, type: string, row: ContractData) {
       // console.log('Status---', row.status, typeof (row.status))
-      // if (row.status === 1) {
-      //   return `<span class="bg-green-500 text-white rounded-lg px-2 py-1">active</span>`
-      // } else {
-      //   return `<span class="bg-rose-500 text-white rounded-lg px-2 py-1">expired</span>`
-      // }
-      return `<span class="bg-rose-500 text-white rounded-lg px-2 py-1">expired</span>`
+      if (row.status === 'active') {
+        return `<span class="bg-green-500 text-white rounded-lg px-2 py-1">active</span>`
+      } else {
+        return `<span class="bg-rose-500 text-white rounded-lg px-2 py-1">expired</span>`
+      }
     }
   },
   {
