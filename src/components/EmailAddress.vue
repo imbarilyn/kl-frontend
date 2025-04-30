@@ -98,7 +98,8 @@ const emailPayLoad = ref<EmailAddressPayload>({
   id: ''
 
 })
-
+const everythingOk = computed(()=>emailMeta.validated && emailMeta.valid)
+const isEmailChange = computed(()=>selectedEmail.value?.email === contractEmail.value)
 const emailUpdateLoading = ref<boolean>(false)
 const updateEmail = () => {
   // console.log('We are editing the emails')
