@@ -50,8 +50,8 @@ const contractData = reactive({
   category: '',
   startDate: '',
   expiryDate: '',
-  status: 0,
-  email_sent: 0
+  status: '',
+  email_sent: ''
 })
 // validator function
 const nameValidator =(value: string) =>{
