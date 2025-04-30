@@ -216,7 +216,7 @@ $(document).ready(function() {
   $('#myTable tbody').on('click', '.download-btn', function() {
     const rowId = $(this).data('id')
     contractData.value = table.row($(this).closest('tr')).data()
-    window.open(`${BASE_URL}/uploads/${contractData.value?.file_upload}`, '_blank')
+    window.open(`${BASE_URL}/contracts/uploads/${contractData.value?.file_upload}`, '_blank')
   })
 
   $('#myTable tbody').on('click', '.delete-btn', function() {
