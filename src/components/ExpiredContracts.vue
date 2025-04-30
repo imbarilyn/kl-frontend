@@ -312,8 +312,8 @@ const handleDelete = () => {
           </template>
           <template #body>
             <div class="space-y-2">
-              <p class="text-center text-normal font-semibold">Deleting {{ contractData?.contract_name }} contract</p>
-              <div class="text-sm">
+              <p class="text-center text-lg font-semibold">Deleting <span class="text-rose-500">{{ contractData?.contract_name }}</span> contract</p>
+              <div class="text-lg">
                 <p>Are you sure you want to delete <span class="text-rose-500">{{ contractData?.contract_name }}?</span>
                 </p>
                 <p>Once deleted cannot be recovered</p>
@@ -325,7 +325,7 @@ const handleDelete = () => {
             <div class="flex justify-center gap-10">
               <button class="btn btn-sm btn-ghost bg-slate-200 px-8" @click="contractStore.closeDeleteDialog()">Cancel
               </button>
-              <button class="btn btn-sm btn-ghost text-white bg-rose-500 px-8" @click="handleDelete">
+              <button class="btn btn-sm btn-ghost text-white bg-rose-500 px-8 hover:bg-rose-400" @click="handleDelete">
                 <span v-if="isLoading" class="loading loading-spinner loading-md"></span>
                 <span v-else>Delete</span>
               </button>
