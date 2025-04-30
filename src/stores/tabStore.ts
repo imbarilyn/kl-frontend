@@ -18,7 +18,7 @@ export const useTabStore = defineStore({
    actions: {
     setActiveTab(tab: string){
       if(this.tabs.includes(tab)){
-        // this.activeTab = tab
+        this.activeTab = tab
         localStorage.setItem('activeTab', tab)
       } else{
         console.log(`${tab} not found`)
