@@ -331,7 +331,7 @@ const reLoadEmails = () => {
               @click.stop="updateEmail"
               class="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-AF-600 border border-transparent rounded-md hover:bg-AF-400 disabled:bg-AF-200 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500"
               type="button"
-              :disabled="emailMeta.validated && !emailMeta.valid"
+              :disabled="!everythingOk ||isEmailChange"
             >
               <span v-if="emailUpdateLoading" class="loading loading-spinner loading-sm"></span>
               <span v-else>Update Email</span>
