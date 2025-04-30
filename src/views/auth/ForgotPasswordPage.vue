@@ -160,8 +160,8 @@ const goLogin = ()=>{
                     </div>
                   </div>
                   <div>
-                    <div class="flex items-center justify-between">
-                      <label class="label font-semibold text-sm" for="email">Password</label>
+                    <div class="flex justify-end">
+<!--                      <label class="label font-semibold text-sm" for="email">Password</label>-->
                       <router-link
                         class="text-sm text-AF-400 decoration-2 hover:underline font-medium dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
                         to="/auth">Login?
@@ -194,8 +194,8 @@ const goLogin = ()=>{
         </template>
         <template #body>
           <div class="flex justify-center flex-col">
-            <p class="text-center pb-2">Please confirm to reset password</p>
-            <span class="text-sm">No worries you shall receive an email with instructions</span>
+            <p class="text-center pb-2 text-lg">Please confirm to reset password</p>
+            <span class="">No worries you shall receive an email with instructions</span>
           </div>
 
         </template>
