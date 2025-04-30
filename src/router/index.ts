@@ -32,12 +32,11 @@ const routes =  [
       },
       {
         name: 'Reset-Password',
-        path: 'reset-password',
+        path: 'reset-password/:resetToken',
         component: () => import('@/views/auth/ResetPassword.vue'),
         props: (route: any)=>{
-          const { query } = route
           return {
-            token: query.token
+            resetToken: route.params.resetToken
 
           }
         },

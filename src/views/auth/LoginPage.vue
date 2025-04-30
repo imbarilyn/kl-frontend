@@ -93,7 +93,7 @@ const loginHandler = ()=>{
     isLoading.value = true
     authStore.loginUser(loginPayload)
       .then(resp =>{
-        if(resp.result == 'success'){
+        if(resp?.result == 'success'){
           router.push({
             name: 'DataTable'
           })
