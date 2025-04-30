@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import ComboBox from '@/components/ComboBox.vue'
 import ListBox from '@/components/ListBox.vue'
-import { defineProps, onMounted, reactive, ref, watch } from 'vue'
+import { computed, defineProps, onMounted, reactive, ref, watch } from 'vue'
 import { useContractStore, useNotificationsStore } from '@/stores'
 import { useField } from 'vee-validate'
 import moment from 'moment'
 import { useRouter } from 'vue-router'
 import Swal from 'sweetalert2'
+import { showAlert } from '@/alert'
 
 const contractStore = useContractStore()
 const notificationStore = useNotificationsStore()
@@ -14,7 +15,7 @@ const countryPrompt = ref('')
 const companyPrompt = ref('')
 const categoryPrompt = ref('')
 const props = defineProps<{
-  id: Number
+  id: string
 }>()
 
 const countries = [
@@ -35,12 +36,10 @@ const companies = [
 ]
 
 const categories = [
-  { id: 1, name: 'Stationery' },
-  { id: 2, name: 'Office Cleaning' },
-  { id: 3, name: 'Staff Miscellaneous' },
-  { id: 4, name: 'Office Rent' },
-  { id: 5, name: 'Repair and Maintenance' },
-  { id: 6, name: 'Expatriate allowance' }
+  { id: 1, name: 'Office and residential' },
+  { id: 2, name: 'Hotels' },
+  { id: 3, name: 'Transport' },
+  { id: 4, name: 'Others' }
 ]
 
 const contractData = reactive({
