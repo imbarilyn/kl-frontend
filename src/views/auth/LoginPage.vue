@@ -7,7 +7,6 @@ import { useNotificationsStore } from '@/stores'
 
 
 const loginPayload = reactive({
-  username: '',
   email: '',
   password: ''
 })
@@ -64,25 +63,25 @@ watch(()=>loginPayload.password, (value)=>{
   password.value = value
 })
 
-const usernameValidator = (value: string) => {
-  if (!value) {
-    return "username is required"
-  }
-  return true
-}
-const {
-  value: username,
-  errorMessage: usernameErrorMessage,
-  meta: usernameMeta
-} = useField('username', usernameValidator)
-
-watch(()=>loginPayload.username, (value)=>{
-  username.value = value
-})
+// const usernameValidator = (value: string) => {
+//   if (!value) {
+//     return "username is required"
+//   }
+//   return true
+// }
+// const {
+//   value: username,
+//   errorMessage: usernameErrorMessage,
+//   meta: usernameMeta
+// } = useField('username', usernameValidator)
+//
+// watch(()=>loginPayload.username, (value)=>{
+//   username.value = value
+// })
 
 const everyThingOkay = computed(()=> {
   return(
-    usernameMeta.validated && usernameMeta.valid &&
+    // usernameMeta.validated && usernameMeta.valid &&
     emailMeta.validated && emailMeta.valid &&
     passwordMeta.validated && passwordMeta.valid
   )
@@ -188,20 +187,20 @@ onBeforeUnmount(()=>{
                     <span class="material-icons !text-4xl pt-3 text-AF-500 pe-3">flight_takeoff</span>
                     <img src="/images/klm-logo.png" alt="klm-logo" class="w-20">
                   </div>
-                  <div>
-                    <label class="label font-semibold text-sm" for="email">Username </label>
-                    <input
-                      v-model="loginPayload.username"
-                      id="username"
-                      class="input input-primary input-bordered  border-1 border-AF-500 w-full text-sm"
-                      placeholder="John Doe"
-                      required
-                      type="text"
-                    />
-                    <div v-if="usernameMeta.validated && !usernameMeta.valid">
-                      <span class="text-rose-500 text-sm">{{usernameErrorMessage}}</span>
-                    </div>
-                  </div>
+<!--                  <div>-->
+<!--                    <label class="label font-semibold text-sm" for="email">Username </label>-->
+<!--                    <input-->
+<!--                      v-model="loginPayload.username"-->
+<!--                      id="username"-->
+<!--                      class="input input-primary input-bordered  border-1 border-AF-500 w-full text-sm"-->
+<!--                      placeholder="John Doe"-->
+<!--                      required-->
+<!--                      type="text"-->
+<!--                    />-->
+<!--                    <div v-if="usernameMeta.validated && !usernameMeta.valid">-->
+<!--                      <span class="text-rose-500 text-sm">{{usernameErrorMessage}}</span>-->
+<!--                    </div>-->
+<!--                  </div>-->
                   <div>
                     <label class="label font-semibold text-sm" for="email">Email address </label>
                     <input
