@@ -109,30 +109,29 @@ const updateEmail = () => {
       type: 'info'
     })
   } else {
-    if (emailMeta.validated && emailMeta.valid) {
+    if (everythingOk.value){
       emailPayLoad.value = {
         email: contractEmail.value,
-        id: selectedEmail.value?.id as number
+        id: selectedEmail.value?.id as string
       }
       emailUpdateLoading.value = true
       contractStore.editEmail(emailPayLoad.value)
         .then(resp => {
           if (resp.result === 'success') {
-            showAlert({
-              message: 'Email address updated successfully',
-              type: 'success'
-            })
-            // closeDialog()
-            setTimeout(() => {
-              emailUpdateLoading.value = false
-              closeEditEmailDialog()
-              window.location.reload()
-            }, 1000)
+            setTimeout(()=>{
+              showAlert({
+                message: resp.message,
+                type: 'success'
+              })
+              loadEmails()
+            }, 1500)
           } else {
-            showAlert({
-              message: 'Unable to update email address, please try again',
-              type: 'error'
-            })
+            setTimeout(()=>{
+              showAlert({
+                message: resp.message,
+                type: 'error'
+              })
+            }, 1500)
           }
         })
         .catch(err => {
@@ -143,7 +142,11 @@ const updateEmail = () => {
           })
         })
         .finally(() => {
-          emailUpdateLoading.value = false
+
+          setTimeout(()=>{
+            emailUpdateLoading.value = false
+            closeEditEmailDialog()
+          }, 1500)
         })
     } else {
       return
