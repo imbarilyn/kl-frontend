@@ -173,36 +173,55 @@ const handleDelete = () => {
   isDeleteLoading.value = true
   emailPayLoad.value = {
     email: selectedEmail.value?.email as string,
-    id: selectedEmail.value?.id as number
+    id: selectedEmail.value?.id as string
   }
   contractStore.deleteEmail(emailPayLoad.value)
     .then(resp => {
-      if (resp.result === 'success') {
-        showAlert({
-          message: 'Email address deleted successfully',
-          type: 'success'
-        })
-        setTimeout(() => {
-          isDeleteLoading.value = false
-          closeDeleteEmailDialog()
-          window.location.reload()
-        }, 2000)
-      } else {
-        showAlert({
-          message: `${resp.message}, please try again`,
-          type: 'error'
-        })
+
+        if (resp.result === 'success') {
+
+          setTimeout(()=>{
+
+          showAlert({
+            message: resp.message,
+            type: 'success'
+          })
+            loadEmails()
+          }, 1500)
+
+
+        }
+
+
+        // setTimeout(() => {
+        //   isDeleteLoading.value = false
+        //   closeDeleteEmailDialog()
+        //   window.location.reload()
+        // }, 2000)
+      else {
+        setTimeout(()=>{
+          showAlert({
+            message: resp.message,
+            type: 'error'
+          })
+        }, 1500)
       }
     })
     .catch(err => {
       console.log(err)
-      showAlert({
-        message: 'Unable to delete email address, please try again',
-        type: 'error'
-      })
+      setTimeout(()=>{
+        showAlert({
+          message: 'Unable to delete email address, please try again',
+          type: 'error'
+        })
+      }, 1500)
     })
     .finally(() => {
-      isDeleteLoading.value = false
+      setTimeout(()=>{
+        isDeleteLoading.value = false
+        closeDeleteEmailDialog()
+      }, 1500)
+
     })
 }
 
