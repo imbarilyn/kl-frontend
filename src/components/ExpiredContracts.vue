@@ -117,12 +117,42 @@ $(document).ready(function() {
 
   const table = $('#myTable').DataTable({
     columns: columns,
-    ajax: {
-      url: `${BASE_URL}/expired-contracts`,
-      dataSrc: 'contracts'
+    // ajax: {
+    //   url: `${BASE_URL}/contracts/expired-contracts`,
+    //   dataSrc: 'data'
+    // },
+    processing: true,
+    serverSide: true,
+    pageLength: 10,
+    ajax: function(data, callback, settings){
+      const ajaxData = data  as DataTableAjaxData
+      let searchValue = ajaxData.search.value
+      let page = Math.floor(settings._iDisplayStart / settings._iDisplayLength) + 1
+      $.ajax({
+        url: `${BASE_URL}/contracts/expired-contracts`,
+        data: {
+          per_page: settings._iDisplayLength,
+          page: page,
+          search: searchValue
+        },
+        success: function(response){
+          callback({
+            draw: ajaxData.draw,
+            recordsTotal: response.total,
+            recordsFiltered: response.total,
+            data: response.data
+          })
+        }
+      })
     },
+    columnDefs: [
+      {
+        targets: '_all', className: 'dt-body-left dt-head-left'
+      }
+
+    ],
     select: true,
-    dom: '<"flex items-center justify-between"<"w-1/3"l><"w-1/3 text-center"B><"w-1/3 text-right"f>><"mt-8"rt><"flex justify-between pt-4"<"w-1/2"i><"flex justify-endw-1/2"p>>',
+    dom: '<"flex items-center justify-between"<"w-1/3"l><"w-1/3 text-center"B><"w-1/3 text-right"f>><"mt-8"rt><"flex justify-between pt-4"<"w-1/2"i><"flex justify-end w-1/2"p>>',
     buttons: [
       {
         extend: 'csv',
