@@ -1,5 +1,5 @@
 /** @type {import('tailwindcss').Config} */
- const { blackA, grass, green } = require('@radix-ui/colors')
+import daisyui from 'daisyui';
 export default {
   content: [
     "./index.html",
@@ -34,7 +34,8 @@ export default {
     },
   },
   plugins: [
-    require('daisyui')
+    // eslint-disable-next-line no-undef
+    daisyui
   ],
   daisyui :{
     themes: ['bumblebee', 'dark', 'emerald', 'forest', 'lofi', 'synthwave', 'retro', 'cyberpunk', 'halloween', 'valentine', 'garden', 'forest', 'dracula', 'corporate', 'winter', 'wireframe', 'black'],
