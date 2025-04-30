@@ -255,9 +255,9 @@ const reLoadEmails = () => {
               <span class="material-icons-outlined text-white">refresh</span>
             </button>
           </div>
-          <div v-else class="text-center">
+          <div v-if="emailAddressesArray.length === 0" class="text-center">
             <h1 class="text-3xl font-bold text-neutral-900">No emails just yet</h1>
-            <p class="text-neutral-500">There are no emails yet, you could add a maximum of 3 emails</p>
+            <p class="text-neutral-500 text-lg">Please note no email notifications for expired contracts for no email address is added </p>
           </div>
         </div>
       </div>
@@ -281,7 +281,7 @@ const reLoadEmails = () => {
         <template #body>
           <div class="grid grid-cols-1 gap-3 py-1 px-5">
             <div class="flex flex-col space-y-2">
-              <label class="label text-sm font-semibold" for="email"> Email address </label>
+              <label class="label text-sm md:text-lg font-semibold" for="email"> Email address </label>
               <input
                 id="page-name"
                 v-model="contractEmail"
@@ -293,10 +293,10 @@ const reLoadEmails = () => {
                 placeholder="Contract Email"
                 type="text"
               />
-              <small v-if="emailMeta.validated && !emailMeta.valid" class="text-xs text-rose-500">
+              <small v-if="emailMeta.validated && !emailMeta.valid" class="text-xs md:text-sm text-rose-500">
                 {{ emailErrorMessage }}
               </small>
-              <small class="text-xs text-gray-500"
+              <small class="text-xs md:text-sm text-gray-500"
               >Please edit the email to update the email address.
               </small>
             </div>
@@ -306,7 +306,7 @@ const reLoadEmails = () => {
           <div class="px-5">
             <button
               @click.stop="updateEmail"
-              class="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-AF-600 border border-transparent rounded-md hover:bg-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500"
+              class="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-AF-600 border border-transparent rounded-md hover:bg-AF-400 disabled:bg-AF-200 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500"
               type="button"
               :disabled="emailMeta.validated && !emailMeta.valid"
             >
@@ -329,18 +329,20 @@ const reLoadEmails = () => {
         </template>
         <template #body>
           <div class="space-y-2">
-            <p class="text-center text-normal font-semibold">Deleting {{ selectedEmail?.email }} contract</p>
+            <p class="text-center md:text-lg text-md">Confirm that you wish to delete email:</p>
             <div class="text-sm">
-              <p>Are you sure you want to delete <span class="text-rose-500">{{ selectedEmail?.email }}?</span></p>
-              <p>Once deleted cannot be recovered</p>
+              <p class="text-center font-semibold">{{selectedEmail?.email }}</p>
+<!--              <p  class="text-rose-500 text-sm md:text-lg">{{ selectedEmail?.email }}</p>-->
+
             </div>
+            <p class="md:ps-10 ps-16 ">Once deleted cannot be recovered</p>
 
           </div>
         </template>
         <template #footer>
           <div class="flex justify-center gap-10">
             <button class="btn btn-sm btn-ghost bg-slate-200 px-8" @click="closeDeleteEmailDialog">Cancel</button>
-            <button class="btn btn-sm btn-ghost text-white bg-rose-500 px-8" @click="handleDelete">
+            <button class="btn btn-sm btn-ghost text-white bg-rose-500 hover:bg-rose-400 px-8" @click="handleDelete">
               <span v-if="isDeleteLoading" class="loading loading-spinner loading-md"></span>
               <span v-else>Delete</span>
             </button>
