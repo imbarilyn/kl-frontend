@@ -233,7 +233,7 @@ const router = useRouter()
 const isLoading = ref<boolean>(false)
 const handleDelete = () => {
   isLoading.value = true
-  contractStore.deleteContract(contractData.value?.id as number)
+  contractStore.deleteContract(contractData.value?.id as  string)
 
     .then((resp) => {
       if (resp.result === 'success') {
