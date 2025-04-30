@@ -16,7 +16,7 @@ const authStore = useAuthStore()
 const notificationStore = useNotificationsStore()
 const router = useRouter()
 const props = defineProps<{
-  token: string
+  resetToken: string
 }>()
 
 
@@ -67,7 +67,7 @@ const isLoading = ref(false)
 const loginHandler = ()=>{
   if(everyThingOkay.value){
     isLoading.value = true
-    authStore.resetPassword({...resetPayload, token: props.token})
+    authStore.resetPassword({...resetPayload, resetToken: props.resetToken})
       .then(resp =>{
         console.log(resp)
         if(resp.result == 'success'){
