@@ -59,7 +59,7 @@ const contractData = reactive({
 })
 // validator function
 const nameValidator =(value: string) =>{
-  const nameRegExp = /^[a-zA-Z0-9\s]+$/
+  // const nameRegExp = /^[a-zA-Z0-9\s]+$/
   if(!value){
     return 'Name is required'
   }
@@ -69,9 +69,9 @@ const nameValidator =(value: string) =>{
   if(value.replace(/\s/g, '').length< 3){
     return 'Name must be more than 3 characters'
   }
-  if(!nameRegExp.test(value)){
-    return 'Name must be alphanumeric'
-  }
+  // if(!nameRegExp.test(value)){
+  //   return 'Name must be alphanumeric'
+  // }
   return true
 }
 
