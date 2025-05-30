@@ -231,7 +231,10 @@ const addContract = () => {
 
   }
   else{
-    notificationStore.addNotification('Please fill in all the fields', 'error')
+    // showAlert({
+    //   message: 'Something went , kindly try again', type: 'error'
+    // })
+    notificationStore.addNotification('Please fill in all the fields accordingly', 'error')
   }
 }
 
