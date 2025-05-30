@@ -22,8 +22,8 @@ interface ContractData {
   category: string;
   start_date: string;
   end_date: string;
-  status: number;
-  id: number
+  status: string;
+  id: string
   file_upload: string
 }
 
@@ -35,21 +35,23 @@ const columns = [
   { data: 'country', title: 'Country' },
   { data: 'vendor_name', title: 'Vendor' },
   { data: 'category', title: 'Category' },
-  { data: 'start_date', title: 'Start Date',
+  {
+    data: 'start_date', title: 'Start Date',
     render: function(data: string, type: string, row: ContractData) {
       return moment(row.start_date, 'yyyy-MM-DD').format('DD MMM YYYY')
     }
   },
-  { data: 'end_date', title: 'Expiry Date',
+  {
+    data: 'end_date', title: 'Expiry Date',
     render: function(data: string, type: string, row: ContractData) {
       return moment(row.end_date, 'yyyy-MM-DD').format('DD MMM YYYY')
-    }},
+    }
+  },
   {
     data: 'status',
     title: 'Status',
     render: function(data: string, type: string, row: ContractData) {
-      console.log('Status---', row.status, typeof (row.status))
-      if (row.status === 1) {
+      if (row.status === 'active') {
         return `<span class="bg-green-500 text-white rounded-lg px-2 py-1">active</span>`
       } else {
         return `<span class="bg-rose-500 text-white rounded-lg px-2 py-1">expired</span>`
