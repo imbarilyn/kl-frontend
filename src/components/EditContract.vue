@@ -291,7 +291,7 @@ onMounted(()=> {
   <div class="h-full w-full" v-if="!isFetching">
     <main class="w-full mx-auto flex items-center justify-center h-full">
       <div
-        class="w-full md:w-6/12 lg:w-5/12 xl:w-4/12 px-4 md:px-2 lg:px-0 bg-white border border-gray-200 rounded-xl shadow-sm dark:bg-gray-800 dark:border-gray-700"
+        class="w-full md:w-6/12 lg:w-5/12 xl:w-4/12 px-4 md:px-2 lg:px-0 border  rounded-xl shadow-sm bg-gray-800 border-gray-700"
       >
         <div class="sm:p-7">
           <div class="text-center">
@@ -308,7 +308,7 @@ onMounted(()=> {
                 <div class="grid grid-cols-2 gap-2">
                   <div class="flex flex-col space-y-1">
                     <div class="flex justify-between items-center">
-                      <label class="label font-semibold text-sm text-white" for="contractName">Contract Name</label>
+                      <label class="label font-semibold text-sm dark:text-white" for="contractName">Contract Name</label>
                     </div>
                     <input
                       v-model="contractData.contractName"
@@ -425,7 +425,9 @@ onMounted(()=> {
                   </div>
                 </div>
                 <div class="w-full">
-                  <button type="submit" class="btn btn-sm  bg-main-color-light hover:bg-main-color-dark w-full">Submit
+                  <button type="submit" class="btn btn-sm  bg-AF-500 hover:bg-AF-300 text-white w-full">
+                    <span v-if="!isLoading">Submit</span>
+                    <span v-else class="loading loading-spinner loading-sm text-white"></span>
                   </button>
                 </div>
               </div>
