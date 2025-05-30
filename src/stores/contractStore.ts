@@ -103,14 +103,15 @@ export const useContractStore = defineStore('contractStore', () => {
 
   }
 
-  async function updateContract(contractId: Number, contract: any) {
+  async function updateContract(contractId: string, contract: any) {
     const notificationStore = useNotificationsStore()
-    console.log(contractId)
+    console.log('Contract-id', contractId)
+    console.log('I am here')
     try {
-      const response = await fetch(`${BASE_URL}/update-contract/${contractId}`, {
+      const response = await fetch(`${BASE_URL}/contracts/update-contract/${contractId}`, {
         method: 'PUT',
-        mode: 'no-cors',
-        body: contract,
+        mode: 'cors',
+        body: contract
       })
       const res = await response.json()
       console.log(res)
