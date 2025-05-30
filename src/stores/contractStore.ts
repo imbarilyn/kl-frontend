@@ -46,6 +46,14 @@ export const useContractStore = defineStore('contractStore', () => {
   const closeDeleteDialog = () => {
     isDeleteDialogOpen.value.isOpen = false
   }
+  const getEmailMoreThanTwo = computed(()=>isEmailsMoreThanTwo.value)
+
+  const setEmailMoreThanTwo = (message: string, show: boolean) => {
+    isEmailsMoreThanTwo.value = {
+      message: message,
+      show: show
+    }
+  }
 
   async function getContracts() {
     try {
