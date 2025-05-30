@@ -117,34 +117,34 @@ $(document).ready(function() {
 
   const table = $('#myTable').DataTable({
     columns: columns,
-    // ajax: {
-    //   url: `${BASE_URL}/contracts/expired-contracts`,
-    //   dataSrc: 'data'
-    // },
-    processing: true,
-    serverSide: true,
-    pageLength: 10,
-    ajax: function(data, callback, settings){
-      const ajaxData = data  as DataTableAjaxData
-      let searchValue = ajaxData.search.value
-      let page = Math.floor(settings._iDisplayStart / settings._iDisplayLength) + 1
-      $.ajax({
-        url: `${BASE_URL}/contracts/expired-contracts`,
-        data: {
-          per_page: settings._iDisplayLength,
-          page: page,
-          search: searchValue
-        },
-        success: function(response){
-          callback({
-            draw: ajaxData.draw,
-            recordsTotal: response.total,
-            recordsFiltered: response.total,
-            data: response.data
-          })
-        }
-      })
+    ajax: {
+      url: `${BASE_URL}/contracts/expired-contracts`,
+      dataSrc: 'data'
     },
+    // processing: true,
+    // serverSide: true,
+    // pageLength: 10,
+    // ajax: function(data, callback, settings){
+    //   const ajaxData = data  as DataTableAjaxData
+    //   let searchValue = ajaxData.search.value
+    //   let page = Math.floor(settings._iDisplayStart / settings._iDisplayLength) + 1
+    //   $.ajax({
+    //     url: `${BASE_URL}/contracts/expired-contracts`,
+    //     data: {
+    //       per_page: settings._iDisplayLength,
+    //       page: page,
+    //       search: searchValue
+    //     },
+    //     success: function(response){
+    //       callback({
+    //         draw: ajaxData.draw,
+    //         recordsTotal: response.total,
+    //         recordsFiltered: response.total,
+    //         data: response.data
+    //       })
+    //     }
+    //   })
+    // },
     columnDefs: [
       {
         targets: '_all', className: 'dt-body-left dt-head-left'
