@@ -183,13 +183,15 @@ const handleCategory = (value: string)=>{
   contractData.category = value
 }
 const router = useRouter()
+const isLoading = ref(false)
 // We can now upload our contracts hooray!
 const addContract = () => {
   const formData = new FormData()
   console.log(typeof (fileUpload.value))
 
   // All good we can now persist the server
-  if(everyThingIsValid()){
+  if(everyThingIsValid.value){
+    isLoading.value = true
     console.log(contractData)
     formData.append('contract_name', contractData.contractName)
     formData.append('vendor_name', contractData.vendorName)
@@ -199,20 +201,34 @@ const addContract = () => {
     formData.append('start_date', contractData.startDate)
     formData.append('end_date', contractData.expiryDate)
     formData.append('file', fileUpload.value[0])
-    formData.append('status', 'active')
     console.log(formData.get('contract_name'))
+    console.log(props.id)
     contractStore.updateContract(props.id, formData)
       .then((resp)=>{
         if(resp.result === 'success'){
-          notificationStore.addNotification(`${resp.message}`, 'success')
+          // notificationStore.addNotification(`${resp.message}`, 'success')
+          showAlert({message: `${resp.message}`, type: 'success'})
           setTimeout(()=>{
             router.push({name: 'DataTable'})
-          }, 1000)
+          }, 2000)
         }
         else{
-          notificationStore.addNotification(`${resp.message}`, 'error')
+          // notificationStore.addNotification(`${resp.message}`, 'error')
+          showAlert({
+            message: `${resp.message}`, type: 'error'
+          })
         }
       })
+      .catch((error)=>{
+        showAlert({
+          message: 'Something went wrong, kindly try again',
+          type: 'error'
+        })
+      })
+      .finally(()=>{
+        isLoading.value = false
+      })
+
   }
   else{
     notificationStore.addNotification('Please fill in all the fields', 'error')
