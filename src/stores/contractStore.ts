@@ -88,15 +88,24 @@ export const useContractStore = defineStore('contractStore', () => {
     }
   }
 
-  async function getContract(contractId: Number) {
+  async function getContract(contractId: string) {
     try {
-      const res = await fetch(`${BASE_URL}/contract/${contractId}`, {
+      const res = await fetch(`${BASE_URL}/contracts/contract/${contractId}`, {
         method: 'GET',
         mode: 'cors'
       })
-      const response = await res.json()
-      console.log(response)
-      return response
+      if(!res.ok) {
+        return {
+          result: 'fail',
+          message: 'Unable to get contract, kindly try again'
+        }
+      }
+      else{
+          const response = await res.json()
+          console.log(response)
+          return response
+      }
+
     } catch (error) {
       console.log('here at get contract', error)
     }
