@@ -12,7 +12,7 @@ export const showAlert = (alertPayload: AlertType )=>{
       text: alertPayload.message,
       icon: 'success',
       confirmButtonText: 'Okay',
-      timer: 1500
+      timer: 3000
     })
   }
 
@@ -22,7 +22,7 @@ export const showAlert = (alertPayload: AlertType )=>{
       text: alertPayload.message,
       icon: 'error',
       confirmButtonText: 'Okay',
-      timer: 1500
+      timer: 3000
     })
   }
   else if(alertPayload.type === 'info') {
@@ -31,7 +31,7 @@ export const showAlert = (alertPayload: AlertType )=>{
       text: alertPayload.message,
       icon: 'info',
       confirmButtonText: 'Okay',
-      timer: 1500
+      timer: 3000
     })
   }
   else{
