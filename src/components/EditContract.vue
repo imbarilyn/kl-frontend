@@ -23,11 +23,15 @@ const countries = [
   { name: 'Uganda' },
   { name: 'Tanzania' },
   { name: 'Rwanda' },
-  { name: 'Djibouti' },
   { name: 'South Africa' },
-  { name: 'Nigeria' },
   { name: 'Ghana' },
-  { name: 'Angola' }
+  {name: 'Zambia'},
+  {name: 'Burundi'},
+  {name: 'Malawi'},
+  {name: 'Ethiopia'},
+  {name: 'Sudan'},
+  {name: 'Angola'}
+
 ]
 
 const companies = [
