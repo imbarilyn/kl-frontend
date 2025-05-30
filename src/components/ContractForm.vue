@@ -2,7 +2,7 @@
 import ListBox from '@/components/ListBox.vue'
 import ComboBox from '@/components/ComboBox.vue'
 import { useField } from 'vee-validate'
-import { reactive, ref, watch } from 'vue'
+import { computed, reactive, ref, watch } from 'vue'
 import moment from 'moment'
 import { useContractStore, useNotificationsStore } from '@/stores'
 import { useRouter } from 'vue-router'
@@ -26,6 +26,8 @@ const countries = [
   {name: 'Malawi'},
   {name: 'Ethiopia'},
   {name: 'Sudan'},
+  {name: 'Angola'}
+
 
 ]
 
@@ -35,12 +37,12 @@ const companies = [
 ]
 
 const categories = [
-  { id: 1, name: 'Stationery' },
-  { id: 2, name: 'Office Cleaning' },
-  { id: 3, name: 'Staff Miscellaneous' },
-  { id: 4, name: 'Office Rent' },
-  { id: 5, name: 'Repair and Maintenance' },
-  { id: 6, name: 'Expatriate allowance' }
+  { id: 1, name: 'Office and residential' },
+  { id: 2, name: 'Hotels' },
+  { id: 3, name: 'Transport' },
+  { id: 4, name: 'Others' },
+  // { id: 5, name: 'Repair and Maintenance' },
+  // { id: 6, name: 'Expatriate allowance' }
 ]
 
 const contractData = reactive({
@@ -56,7 +58,7 @@ const contractStore = useContractStore()
 // validator function
 const nameValidator =(value: string) =>{
   // console.log('nameValidator', value, contractData.contractName)
-  const nameRegExp = /^[a-zA-Z0-9\s]+$/
+  // const nameRegExp = /^[a-zA-Z0-9\s]+$/
   if(!value){
     return 'Name is required'
   }
@@ -66,9 +68,9 @@ const nameValidator =(value: string) =>{
   if(value.replace(/\s/g, '').length< 3){
     return 'Name must be more than 3 characters'
   }
-  if(!nameRegExp.test(value)){
-    return 'Name must be alphanumeric'
-  }
+  // if(!nameRegExp.test(value)){
+  //   return 'Name must be alphanumeric'
+  // }
   return true
 }
 
@@ -103,8 +105,7 @@ const startDateValidator = (value: string) => {
     return 'Start date is required'
   }
   if(moment(value).isAfter(now)){
-    console.log('start date is before today')
-    return 'Start date should not be before today'
+    return 'Start date should not be in the future'
   }
   return true
 }
@@ -119,12 +120,14 @@ const startDateValidator = (value: string) => {
   })
 
 const expiryDateValidator = (value: string) => {
+  // let timeThreshold = moment().add(1, 'month')
+  // let timeThreshold = moment().add(1, 'hours')
   if (!value) {
     return 'Expiry date is required'
   }
-  if(moment(value).isBefore(now)){
-    return 'Expiry date should not be before today'
-  }
+  // if(moment(value).isBefore(timeThreshold)){
+  // return 'Expiry date should be at least a month from today'
+  // }
   return true
 }
 
@@ -147,21 +150,20 @@ const fileUploadError = ref('')
 const fileAdd = (e: Event) =>{
   const target = e.target as HTMLInputElement
   const file = target.files as FileList
-  const maxSize = 1024 * 1024 * 3
+  const maxSize = 1024 * 1024 * 10
   if(file.length > 0 && file[0].size <= maxSize){
     fileUpload.value = file
     console.log(fileUpload.value[0])
     return true
   }
   else{
-    fileUploadError.value = 'File size should not exceed 3MB'
+    fileUploadError.value = 'File size should not exceed 10MB'
     return false
   }
 }
 
-const everyThingIsValid = () => {
-  return contractNameMeta.validated && contractNameMeta.valid && vendorNameMeta.validated  && vendorNameMeta.valid && startDateMeta.validated   && startDateMeta.valid &&  expiryDateMeta.validated  && expiryDateMeta.valid  && fileUpload;
-}
+const everyThingIsValid = computed(() =>contractNameMeta.validated && contractNameMeta.valid && vendorNameMeta.validated  && vendorNameMeta.valid && startDateMeta.validated   && startDateMeta.valid &&  expiryDateMeta.validated  && expiryDateMeta.valid  && fileUpload);
+
 
 const handleCountry = (value: string) =>{
   contractData.country = value
@@ -175,13 +177,16 @@ const handleCategory = (value: string)=>{
   contractData.category = value
 }
 const router = useRouter()
+const isLoading = ref(false)
+
 // We can now upload our contracts hooray!
 const addContract = () => {
   const formData = new FormData()
   console.log(typeof (fileUpload.value))
 
   // All good we can now persist the server
-  if(everyThingIsValid()){
+  if(everyThingIsValid.value){
+    isLoading.value = true
     formData.append('contract_name', contractData.contractName)
     formData.append('vendor_name', contractData.vendorName)
     formData.append('country', contractData.country)
@@ -190,12 +195,15 @@ const addContract = () => {
     formData.append('start_date', contractData.startDate)
     formData.append('end_date', contractData.expiryDate)
     formData.append('file', fileUpload.value[0])
+
     
     contractStore.addContract(formData)
       .then((resp)=>{
         if(resp.result === 'success'){
           // notificationStore.addNotification(`${resp.message}`, 'success')
-        showAlert({message: `${resp.message}`, type: 'success'})
+          setTimeout(()=>{
+            showAlert({message: `${resp.message}`, type: 'success'})
+          }, 1000)
 
           setTimeout(()=>{
             router.push({name: 'DataTable'})
@@ -205,6 +213,14 @@ const addContract = () => {
           showAlert({message: `${resp.message}`, type: 'error'})
           // notificationStore.addNotification(`${resp.message}`, 'error')
         }
+      })
+      .catch((error)=>{
+        showAlert({message: 'An error occurred, please try again', type: 'error'})
+        // notificationStore.addNotification('An error occurred', 'error')
+
+      })
+      .finally(()=>{
+        isLoading.value = false
       })
   }
   else{
@@ -219,7 +235,7 @@ const addContract = () => {
   <div class="h-full w-full ">
     <main class="w-full mx-auto flex items-center justify-center h-full">
       <div
-        class="w-full md:w-6/12 lg:w-5/12 xl:w-4/12 px-4 md:px-2 lg:px-0 bg-white border border-gray-200 rounded-xl shadow-sm dark:bg-gray-800 dark:border-gray-700"
+        class="w-full md:w-6/12 lg:w-5/12 xl:w-4/12 px-4 md:px-2 lg:px-0  border  rounded-xl shadow-sm bg-gray-800 border-gray-700"
       >
         <div class="sm:p-7">
           <div class="text-center">
@@ -353,7 +369,9 @@ const addContract = () => {
                   </div>
                 </div>
                 <div class="w-full">
-                  <button type="submit" class="btn btn-sm  bg-AF-400 hover:bg-AF-600 w-full">Submit
+                  <button type="submit" class="btn btn-sm  text-white bg-AF-400 hover:bg-AF-300 w-full">
+                    <span v-if="!isLoading">Submit</span>
+                    <span v-else class="loading loading-spinner loading-sm text-white"></span>
                   </button>
                 </div>
               </div>
