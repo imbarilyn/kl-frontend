@@ -168,9 +168,8 @@ const fileAdd = (e: Event) =>{
   }
 }
 
-const everyThingIsValid = () => {
-  return contractNameMeta.validated && contractNameMeta.valid && vendorNameMeta.validated  && vendorNameMeta.valid && startDateMeta.validated   && startDateMeta.valid &&  expiryDateMeta.validated  && expiryDateMeta.valid  && fileUpload;
-}
+const everyThingIsValid = computed(() =>contractNameMeta.validated && contractNameMeta.valid && vendorNameMeta.validated  && vendorNameMeta.valid && startDateMeta.validated   && startDateMeta.valid &&  expiryDateMeta.validated  && expiryDateMeta.valid  && fileUpload)
+
 
 const handleCountry = (value: string) =>{
   contractData.country = value
