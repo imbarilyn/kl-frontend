@@ -6,10 +6,12 @@ import { computed, ref, watch, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { showAlert } from '@/alert'
 import { useAuthStore } from '@/stores/authStore'
+import { useTabStore } from '@/stores/tabStore'
 
 const contractStore = useContractStore()
 const router = useRouter()
 const authStore = useAuthStore()
+const tabStore = useTabStore()
 const addContractEmail = () => {
   contractStore.openAddEmailDialog()
 }
@@ -21,11 +23,11 @@ const emailValidator = (value: string) => {
     return 'Email is required'
   }
 console.log()
-  // const emailRegex = /^[a-zA-Z0-9._%+-]+@klm\.com$/
-  //
-  // if (!emailRegex.test(value)) {
-  //   return 'Email must be valid ending with @klm.com'
-  // }
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@klm\.com$/
+
+  if (!emailRegex.test(value)) {
+    return 'Email must be valid ending with @klm.com'
+  }
 
   if (value.length > 50) {
     return 'Email must be less than 50 characters'
