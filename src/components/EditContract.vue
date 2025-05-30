@@ -155,14 +155,14 @@ const fileUploadError = ref('')
 const fileAdd = (e: Event) =>{
   const target = e.target as HTMLInputElement
   const file = target.files as FileList
-  const maxSize = 1024 * 1024 * 3
+  const maxSize = 1024 * 1024 * 10
   if(file.length > 0 && file[0].size <= maxSize){
     fileUpload.value = file
     console.log(fileUpload.value[0])
     return true
   }
   else{
-    fileUploadError.value = 'File size should not exceed 3MB'
+    fileUploadError.value = 'File size should not exceed 10MB'
     return false
   }
 }
