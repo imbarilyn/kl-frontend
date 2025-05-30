@@ -12,6 +12,7 @@ import DialogModal from '@/components/DialogModal.vue'
 import Swal from 'sweetalert2'
 import { ref } from 'vue'
 import moment from 'moment/moment'
+import type { DataTableAjaxData } from '@/components/ExpiredContracts.vue'
 
 
 interface ContractData {
@@ -64,7 +65,6 @@ const columns = [
     orderable: false,
     searchable: false,
     render: function(data: Partial<ContractData>, row: ContractData, type: string) {
-      console.log(row.id)
       return `
 <div class="flex gap-3 justify-center items-center">
       <button class="edit-btn" data-id="${data.id}"><span class="material-icons-outlined text-AF-500">edit</span></button>
@@ -95,19 +95,56 @@ $(document).ready(function() {
 
   const table = $('#myTable').DataTable({
     columns: columns,
+    // processing: true,
+    // serverSide: true,
+    // pageLength: 10,
     ajax: {
-      url: `${BASE_URL}/contracts`,
-      dataSrc: 'contracts'
+      url: `${BASE_URL}/contracts/view-contracts`,
+      dataSrc: (json)=>{
+        console.log(json)
+        return json.data
+
+
+      }
     },
+    // ajax: function(data, callback, settings){
+    //   const ajaxData = data as DataTableAjaxData
+    //   let searchValue = ajaxData.search.value
+    //   let page = Math.floor(settings._iDisplayStart / settings._iDisplayLength) + 1
+    //   $.ajax({
+    //     url: `${BASE_URL}/contracts/view-contracts`,
+    //     data: {
+    //       per_page: settings._iDisplayLength,
+    //       page: page,
+    //       search: searchValue
+    //     },
+    //     success: function(response){
+    //       callback({
+    //         draw: ajaxData.draw,
+    //         recordsTotal: response.total,
+    //         recordsFiltered: response.total,
+    //         data: response.data
+    //       })
+    //     }
+    //   })
+    // },
+    columnDefs: [
+      {
+        targets: '_all', className: 'dt-body-left dt-head-left'
+      }
+
+    ],
+    paging: true,
     select: true,
-    dom: '<"flex items-center justify-between"<"w-1/3"l><"w-1/3 text-center"B><"w-1/3 text-right"f>><"mt-8"rt><"flex justify-between pt-4"<"w-1/2"i><"flex justify-endw-1/2"p>>',
+    scrollX: true,
+    dom: '<"flex items-center justify-between"<"w-1/3"l><"w-1/3 text-center"B><"w-1/3 text-right"f>><"mt-8"rt><"flex justify-between pt-4"<"w-1/2"i><"flex justify-end w-1/2"p>>',
     buttons: [
       {
         extend: 'csv',
         className: 'bg-transparent',
-        // exportOptions: {
-        //   columns: exceptedColumns
-        // }
+        exportOptions: {
+          columns: exceptedColumns
+        }
       },
       {
         extend: 'print',
@@ -157,13 +194,13 @@ $(document).ready(function() {
     // const rowData = table.row($(this).parents('tr')).data()
   })
 
-  $('#myTable tbody').on('click', '.download-btn', function() {
+  table.on('click', '.download-btn', function() {
     const rowId = $(this).data('id')
     contractData.value = table.row($(this).closest('tr')).data()
-    window.open(`${BASE_URL}/uploads/${contractData.value?.file_upload}`, '_blank')
+    window.open(`${BASE_URL}/contracts/uploads/${contractData.value?.file_upload}`, '_blank')
   })
 
-  $('#myTable tbody').on('click', '.delete-btn', function() {
+  table.on('click', '.delete-btn', function() {
     const rowId = $(this).data('id')
     contractData.value = table.row($(this).closest('tr')).data()
     contractStore.openDeleteDialog()
@@ -173,7 +210,7 @@ $(document).ready(function() {
 
 // DataTable.use(DataTablesCore);
 // const data = ref<ContractData []>([]);
-const notificationStore = useNotificationsStore()
+
 
 
 // {
@@ -315,14 +352,14 @@ const router = useRouter()
 const isLoading = ref<boolean>(false)
 const handleDelete = () => {
   isLoading.value = true
-  contractStore.deleteContract(contractData.value?.id as number)
+  contractStore.deleteContract(contractData.value?.id as string)
 
     .then((resp) => {
       if (resp.result === 'success') {
         // notificationStore.addNotification('Contract deleted successfully', 'success')
         Swal.fire({
           title: 'Deleted!',
-          text: 'Contract has been deleted.',
+          text: 'Contract has been deleted successfully.',
           icon: 'success',
           showConfirmButton: false,
           backdrop: 'swal2-backdrop-show',
@@ -348,7 +385,16 @@ const handleDelete = () => {
 
     })
     .catch((err) => {
-      console.log(err)
+      Swal.fire({
+        title: 'Error!',
+        text: 'Unable to delete contract, please try again',
+        icon: 'error',
+        showConfirmButton: false,
+        backdrop: 'swal2-backdrop-show',
+        allowOutsideClick: true,
+        timer: 1500
+      })
+
     })
     .finally(() => {
       isLoading.value = false
@@ -363,12 +409,7 @@ const handleDelete = () => {
 
 <template>
   <div>
-<!--    <div class="md:ms-24 ms-10 sticky top-0 bg-white ">-->
-<!--      <h1 class="text-4xl text-AF-500 font-medium">Contracts Section</h1>-->
-<!--    </div>-->
     <div class="md:mx-16 ms-10  min-w-80  p-8 shadow-lg rounded-lg">
-
-
       <div>
         <table id="myTable" class="display">
           <thead>
@@ -393,8 +434,8 @@ const handleDelete = () => {
           </template>
           <template #body>
             <div class="space-y-2">
-              <p class="text-center text-normal font-semibold">Deleting {{ contractData?.contract_name }} contract</p>
-              <div class="text-sm">
+              <p class="text-center text-lg font-semibold">Deleting <span class="text-rose-500">{{ contractData?.contract_name }}</span> contract</p>
+              <div class="text-lg">
                 <p>Are you sure you want to delete <span class="text-rose-500">{{ contractData?.contract_name }}?</span>
                 </p>
                 <p>Once deleted cannot be recovered</p>
@@ -406,7 +447,7 @@ const handleDelete = () => {
             <div class="flex justify-center gap-10">
               <button class="btn btn-sm btn-ghost bg-slate-200 px-8" @click="contractStore.closeDeleteDialog()">Cancel
               </button>
-              <button class="btn btn-sm btn-ghost text-white bg-rose-500 px-8" @click="handleDelete">
+              <button class="btn btn-sm btn-ghost text-white bg-rose-500 px-8 hover:bg-rose-400" @click="handleDelete">
                 <span v-if="isLoading" class="loading loading-spinner loading-md"></span>
                 <span v-else>Delete</span>
               </button>
@@ -416,7 +457,6 @@ const handleDelete = () => {
 
         </DialogModal>
       </teleport>
-
     </div>
   </div>
 
