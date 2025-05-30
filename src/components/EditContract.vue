@@ -256,6 +256,8 @@ onMounted(()=> {
         categoryPrompt.value = response.data.category
         contractData.startDate = response.data.start_date
         contractData.expiryDate = response.data.end_date
+        contractData.status = response.data.status
+        contractData.email_sent = response.data.email_sent
         fileUpload.value = response.data.file_upload
         console.log(countryPrompt.value)
         console.log(companyPrompt.value)
