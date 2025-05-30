@@ -121,18 +121,19 @@ watch(()=>contractData.startDate, (value)=>{
 })
 
 const expiryDateValidator = (value: string) => {
-  let isExpired = moment(contractData.expiryDate).isBefore(now)
-  let isEmailSent = contractData.email_sent === 1
- let  timeThreshold = moment().add(32, 'days')
+  // let isExpired = contractData.status === 'expired'
+  // let isEmailSent = contractData.email_sent === 'yes'
+ // let  timeThreshold = moment().add(1, 'month')
+  // let timeThreshold = moment().add(1, 'hours')
   if (!value) {
     return 'Expiry date is required'
   }
-  if(isExpired && moment(value).isBefore(timeThreshold)){
-    return 'Expiry date should be more than one month from today'
-  }
-  if(!isExpired && !isEmailSent && moment(value).isBefore(timeThreshold)){
-    return 'Expiry date should be more than one month from today'
-  }
+  // if(isExpired && moment(value).isBefore(timeThreshold)){
+  //   return 'Expiry date should at least one month from today'
+  // }
+  // if(!isExpired && !isEmailSent && moment(value).isBefore(timeThreshold)){
+  //   return 'Expiry date should be more than one month from today'
+  // }
   return true
 }
 
