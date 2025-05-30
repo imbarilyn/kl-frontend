@@ -46,25 +46,40 @@ watch(() => contractEmail.value, (value) => {
   email.value = value
 })
 
+const isLoadingEmail = ref(false)
+const everyThingOk = computed(()=> emailMeta.valid && emailMeta.validated)
 // const isLoading
 const postEmail = () => {
-  if (emailMeta.valid && emailMeta.validated) {
+  if (everyThingOk.value) {
+    isLoadingEmail.value = true
     console.log('email', contractEmail.value)
     contractStore.addEmail(contractEmail.value)
       .then((resp) => {
         console.log('resp--', resp.message)
         if (resp.result === 'success') {
-          showAlert({ message: 'Email added successfully', type: 'success' })
+          setTimeout(()=>{
+            showAlert({ message: resp.message, type: 'success' })
+          }, 1500)
+          window.location.reload()
         } else {
-          showAlert({ message: `${resp.message}`, type: 'error' })
+          setTimeout(()=>{
+            showAlert({ message: `${resp.message}`, type: 'error' })
+          }, 1500)
+
         }
       })
       .catch((error) => {
-        showAlert({ message: 'Email not added, please try again', type: 'error' })
+        setTimeout(()=>{
+          showAlert({ message: 'Failed to add email, please try again', type: 'error' })
+        }, 1500)
       })
       .finally(() => {
-        contractEmail.value = ''
-        contractStore.closeEmailDialog()
+        setTimeout(()=>{
+          contractEmail.value = ''
+          contractStore.closeEmailDialog()
+          isLoadingEmail.value = false
+        }, 1500)
+
       })
   } else {
     showAlert({ message: 'Enter valid email', type: 'error' })
@@ -83,23 +98,7 @@ const addContract = () => {
   )
 }
 
-const viewContracts = (tab: string) => {
-  activeTab.value = tab
-  router.push(
-    {
-      name: 'DataTable'
-    }
-  )
-}
 
-const viewEmailAddress = (tab: string) => {
-  activeTab.value = tab
-  router.push(
-    {
-      name: 'email'
-    }
-  )
-}
 const isCollapse = ref(false)
 const collapseSidebar = (value: boolean) => {
   isCollapse.value = value
@@ -108,21 +107,36 @@ const collapseSidebar = (value: boolean) => {
 const route = useRoute()
 // allow collapse only on DataTable
 const showArrow = computed(() => {
-  return route.name === 'DataTable'   || route.name === 'expired-contracts'
+  return route.name === 'DataTable'   || route.name === 'expiredContracts'
 })
 
-const handleExpiredContracts = (tab: string)=>{
-  activeTab.value = tab
-  router.push({
-    name: 'expired-contracts'
-  })
-}
-const activeTab = ref('contracts')
+const viewComponent = (component: string) => {
+  tabStore.setActiveTab(component)
+  if(component === 'contracts'){
+    router.push({
+      name: 'DataTable'
+    })
+  }
+  else if(component === 'emails'){
+    router.push({
+      name: 'email'
+    })
+  }
+  else{
+    router.push({
+      name: 'expiredContracts'
+    })
+  }
+  console.log(tabStore.getActiveTab)
 
+}
+const isLoading =  ref(false)
 const handleLogout = ()=>{
   authStore.logout()
+  isLoading.value = true
   setTimeout(()=>{
     contractStore.closeLogoutDialog()
+    isLoading.value = false
     router.push({
       name: 'Login'
     })
@@ -132,15 +146,17 @@ const expiredContracts = ref(0)
 onMounted(()=>{
   contractStore.getExpiredContracts()
     .then((resp)=>{
+      console.log(resp)
       if(resp.result === 'success'){
-        console.log('expired contracts', resp.data)
-        console.log('expired contracts', resp.data)
-        expiredContracts.value = resp.data.length
+        expiredContracts.value = resp.total
       }
-      return
+      else{
+        expiredContracts.value = resp.total
+      }
     })
     .catch((error)=>{
-      return
+      expiredContracts.value = 0
+
     })
 
 })
@@ -160,24 +176,23 @@ onMounted(()=>{
     >
       <div class="h-screen z-20 w-64" v-if="!isCollapse">
         <div
-          class='fixed px-4 py-4 z-40 w-64 block md-hidden  bg-AF-600 bottom-0 top-0 inset-y-0 h-screen'>
+          class='fixed px-4 py-4 z-40 w-64 shadow-2xl rounded- block md-hidden  bg-AF-600 bottom-0 top-0 inset-y-0 h-screen'>
           <!--        klm logo-->
           <div class="flex">
             <div class="flex  items-end gap-1">
               <span class="material-icons text-white !text-3xl">emoji_emotions</span>
               <span class="text-white text-xl font-semibold">Welcome {{authStore.getUserInfo()?.username as string}}</span>
             </div>
-            <div
-              v-if="showArrow"
-              @click="collapseSidebar(true)"
-              class="relative btn btn-sm  left-12 bg-AF-700 hover:bg-AF-900 rounded-full w-8 h-8 flex justify-center items-center cursor-pointer">
-              <span class="material-icons-outlined text-white">arrow_back_ios</span>
-            </div>
-
+          </div>
+          <div
+            v-if="showArrow"
+            @click="collapseSidebar(true)"
+            class="relative btn btn-sm  left-56 bg-AF-700 hover:bg-AF-900 rounded-full w-8 h-8 flex justify-center items-center cursor-pointer">
+            <span class="material-icons-outlined text-white">arrow_back_ios</span>
           </div>
 
           <!--        contracts per country  section-->
-          <div class="pt-10 flex flex-col">
+          <div class="pt-4 flex flex-col">
             <div class="pb-4 flex gap-2">
               <span class="material-icons text-white">grid_view</span>
               <span class="text-white font-semibold">Dashboard</span>
@@ -185,8 +200,8 @@ onMounted(()=>{
             <div class="overflow-y-auto">
               <div class="pb-4">
                 <button class="btn btn-sm w-full justify-start "
-                        :class="[activeTab === 'contracts' ? 'bg-AF-700 text-white border-none hover:bg-AF-700' : '']"
-                        @click="viewContracts('contracts')"
+                        :class="[tabStore.getActiveTab === 'contracts' ? 'bg-AF-700 text-white border-none hover:bg-AF-700' : '']"
+                        @click="viewComponent('contracts')"
                 >
                   <span class="material-icons-outlined ">summarize</span>
                   <span class="">Contracts</span>
@@ -197,8 +212,8 @@ onMounted(()=>{
               <!--          Available email address-->
               <div class="pb-4">
                 <button class="btn btn-sm w-full justify-start"
-                        :class="[activeTab === 'email' ? 'bg-AF-700 text-white border-none hover:bg-AF-700' : '']"
-                        @click="viewEmailAddress('email')">
+                        :class="[tabStore.getActiveTab === 'emails' ? 'bg-AF-700 text-white border-none hover:bg-AF-700' : '']"
+                        @click="viewComponent('emails')">
                   <span class="material-icons-outlined">email</span>
                   <span>Email addresses</span>
                 </button>
@@ -206,8 +221,8 @@ onMounted(()=>{
               <!--          expired contracts-->
               <div class="relative">
                 <button
-                  @click="handleExpiredContracts('expired-contracts')"
-                  :class="[activeTab === 'expired-contracts' ? 'bg-AF-700 text-white border-none hover:bg-AF-700' : '']"
+                  @click="viewComponent('expired-contracts')"
+                  :class="[tabStore.getActiveTab === 'expired-contracts' ? 'bg-AF-700 text-white border-none hover:bg-AF-700' : '']"
                   class="btn btn-sm w-full justify-start">
                   <span class="material-icons-outlined">running_with_errors</span>
                   <span>Expired Contracts</span>
@@ -265,8 +280,9 @@ onMounted(()=>{
           <div :class="{'me-4': !isCollapse}">
             <button
               @click="addContractEmail"
+              :disabled="contractStore. isEmailMax"
               class=" btn btn-sm w-full btn-ghost justify-start">
-              <span class="material-icons text-AF-600 ">email</span>
+              <span class="material-icons" :class="[contractStore.getEmailMoreThanTwo.show? ' ': 'text-AF-600']">email</span>
               <span class="hidden md:block"> New email</span>
             </button>
           </div>
@@ -317,7 +333,7 @@ onMounted(()=>{
             <small v-if="emailMeta.validated && !emailMeta.valid" class="text-xs text-rose-500">
               {{ emailErrorMessage }}
             </small>
-            <small class="text-xs text-gray-500"
+            <small class="text-sm text-gray-500"
             >This will be used as email address for contract expiry notification and it shall be sent 3 months prior to
               the expiry date
             </small>
@@ -328,11 +344,12 @@ onMounted(()=>{
         <div class="px-5">
           <button
             @click="postEmail"
-            class="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-AF-600 border border-transparent rounded-md hover:bg-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500"
+            class="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-AF-600 border border-transparent disabled:bg-AF-200 rounded-md hover:bg-AF-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500"
             type="button"
+            :disabled="!everyThingOk"
           >
-            <!--          <span class="loading loading-spinner loading-sm"></span>-->
-            <span>Add Email</span>
+                      <span v-if="isLoadingEmail" class="loading loading-spinner loading-sm"></span>
+            <span v-else>Add Email</span>
           </button>
         </div>
       </template>
@@ -356,7 +373,10 @@ onMounted(()=>{
       </template>
       <template #footer>
         <div class="flex justify-center w-full flex-row">
-          <button @click="handleLogout" class="btn bg-AF-800 text-white me-5 hover:bg-AF-100 hover:text-AF-800">Sign Out</button>
+          <button @click="handleLogout" class="btn bg-AF-500 text-white me-5 hover:bg-AF-300">
+            <span v-if="!isLoading">Sign Out</span>
+            <span v-else class="loading loading-spinner loading-sm text-white"></span>
+          </button>
           <button class="btn bg-slate-300" @click="contractStore.closeLogoutDialog()">
             Cancel
           </button>
