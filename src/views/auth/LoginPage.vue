@@ -22,11 +22,11 @@ const emailValidator = (value: string) => {
     return 'Email too short'
   }
 
-  const emailRegex = /^[a-zA-Z0-9._%+-]+@klm\.com$/
-  // const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  // const emailRegex = /^[a-zA-Z0-9._%+-]+@klm\.com$/
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
   if (!emailRegex.test(value)) {
-    return 'Email must be valid ending with @klm.com'
+    return 'Email must be valid'
   }
 
   if (value.length > 50) {
