@@ -26,7 +26,8 @@ const countries = [
   {name: 'Malawi'},
   {name: 'Ethiopia'},
   {name: 'Sudan'},
-  {name: 'Angola'}
+  {name: 'Angola'},
+  {name: 'Nigeria'}
 
 
 ]
