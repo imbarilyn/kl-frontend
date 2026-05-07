@@ -103,7 +103,7 @@ const loginHandler = ()=>{
             isLoading.value = false
             authStore.isAuthenticationError = {
               isError: true,
-              message: 'Invalid credentials',
+              message: resp?.response || 'Something went wrong, please try again',
               type: 'error'
             }
           }, 1000)
