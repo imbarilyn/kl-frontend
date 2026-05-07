@@ -91,7 +91,6 @@ export  const useAuthStore = defineStore('useAuthStore', () =>{
 
 //   login user
   async function loginUser (loginPayload:  LoginPayload){
-    console.log(loginPayload)
     const formData = new FormData()
     formData.append('email', loginPayload.email)
     formData.append('password', loginPayload.password)
@@ -102,22 +101,22 @@ export  const useAuthStore = defineStore('useAuthStore', () =>{
         mode: 'cors'
       }
       )
-      console.log('try block')
-      if(!response.ok){
+      const data = await response.json()
+      if(!data.access_token){
         return {
           result: 'fail',
+          response: data.detail
         }
-      }
-      else{
-        const resp = await response.json()
-        decodeToken(resp.access_token)
+      } else{
+        decodeToken(data.access_token)
         return {
-          result: 'success'
+          result: 'success',
+          response: data.detail
         }
       }
     }
     catch(e) {
-      // return
+     return
     }
   }
 
